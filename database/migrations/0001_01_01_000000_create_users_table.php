@@ -16,9 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('no_tlp');
-            $table->enum('role', ['super_admin', 'admin', 'nasabah']);
-            $table->foreignId('bank_sampah_id')->nullable()->constrained('bank_sampah')->nullOnDelete();
+            $table->enum('role', ['admin', 'member']);
+            $table->string('phone_number')->nullable();
             $table->timestamps();
         });
 
