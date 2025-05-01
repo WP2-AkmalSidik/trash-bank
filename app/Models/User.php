@@ -12,7 +12,11 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role'
+        'name',
+        'email',
+        'password',
+        'role',
+        'phone_number',
     ];
 
     public function memberAccount()
@@ -30,4 +34,23 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /**
+     * Check if user is admin
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is member
+     *
+     * @return bool
+     */
+    public function isMember(): bool
+    {
+        return $this->role === 'member';
+    }
 }

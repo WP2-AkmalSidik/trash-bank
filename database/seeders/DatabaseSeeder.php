@@ -23,13 +23,15 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin TrashBank',
             'email' => 'admin@trashbank.com',
             'password' => bcrypt('password123'),
+            'phone_number' => '081234567890',
             'role' => 'admin',
         ]);
 
         $member = User::create([
             'name' => 'John Doe',
-            'email' => 'john.doe@example.com',
+            'email' => 'john@example.com',
             'password' => bcrypt('password123'),
+            'phone_number' => '081234567890',
             'role' => 'member',
         ]);
 
