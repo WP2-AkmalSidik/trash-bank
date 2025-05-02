@@ -4,12 +4,12 @@
 @section('content')
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <!-- Total Nasabah -->
-        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-emerald-500">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-emerald-500">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Total Nasabah</p>
-                    <p class="text-2xl font-bold text-gray-900">235</p>
-                    <p class="text-xs text-green-600 flex items-center mt-1">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Nasabah</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">235</p>
+                    <p class="text-xs text-green-600 dark:text-green-500 flex items-center mt-1">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-3 h-3 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
@@ -17,7 +17,7 @@
                         15% bulan ini
                     </p>
                 </div>
-                <div class="p-3 bg-emerald-500/10 rounded-full">
+                <div class="p-3 bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-8 h-8 text-emerald-500">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -28,12 +28,12 @@
         </div>
 
         <!-- Total Sampah Masuk (kg) -->
-        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-blue-500">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Sampah Masuk</p>
-                    <p class="text-2xl font-bold text-gray-900">1,284 kg</p>
-                    <p class="text-xs text-green-600 flex items-center mt-1">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Sampah Masuk</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">1,284 kg</p>
+                    <p class="text-xs text-green-600 dark:text-green-500 flex items-center mt-1">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-3 h-3 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
@@ -41,7 +41,7 @@
                         8% minggu ini
                     </p>
                 </div>
-                <div class="p-3 bg-blue-500/10 rounded-full">
+                <div class="p-3 bg-blue-500/10 dark:bg-blue-500/20 rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-8 h-8 text-blue-500">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -52,12 +52,12 @@
         </div>
 
         <!-- Total Penarikan Dana -->
-        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-amber-500">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-amber-500">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Penarikan Dana</p>
-                    <p class="text-2xl font-bold text-gray-900">Rp 5,4 jt</p>
-                    <p class="text-xs text-red-600 flex items-center mt-1">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Penarikan Dana</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp 5,4 jt</p>
+                    <p class="text-xs text-red-600 dark:text-red-500 flex items-center mt-1">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-3 h-3 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -65,7 +65,7 @@
                         3% minggu ini
                     </p>
                 </div>
-                <div class="p-3 bg-amber-500/10 rounded-full">
+                <div class="p-3 bg-amber-500/10 dark:bg-amber-500/20 rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-8 h-8 text-amber-500">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -76,12 +76,12 @@
         </div>
 
         <!-- Jumlah Bank Sampah -->
-        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-purple-500">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Bank Sampah</p>
-                    <p class="text-2xl font-bold text-gray-900">12</p>
-                    <p class="text-xs text-green-600 flex items-center mt-1">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Bank Sampah</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">12</p>
+                    <p class="text-xs text-green-600 dark:text-green-500 flex items-center mt-1">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-3 h-3 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
@@ -89,7 +89,7 @@
                         2 baru
                     </p>
                 </div>
-                <div class="p-3 bg-purple-500/10 rounded-full">
+                <div class="p-3 bg-purple-500/10 dark:bg-purple-500/20 rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-8 h-8 text-purple-500">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -103,15 +103,17 @@
     <!-- Charts and Activity Section -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <!-- Chart - Statistik Sampah Masuk -->
-        <div class="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 lg:col-span-2">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-gray-900">Statistik Sampah Masuk (kg)
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Statistik Sampah Masuk (kg)
                 </h2>
                 <div class="flex space-x-2">
                     <button
-                        class="px-3 py-1 text-xs font-medium bg-emerald-100 text-emerald-700 rounded-md">Mingguan</button>
-                    <button class="px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-md">Bulanan</button>
-                    <button class="px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-md">Tahunan</button>
+                        class="px-3 py-1 text-xs font-medium bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-200 rounded-md">Mingguan</button>
+                    <button
+                        class="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md">Bulanan</button>
+                    <button
+                        class="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md">Tahunan</button>
                 </div>
             </div>
             <div class="relative h-72">
@@ -121,90 +123,94 @@
         </div>
 
         <!-- Pengajuan Penarikan Terbaru -->
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-gray-900">Pengajuan Penarikan</h2>
-                <a href="#" class="text-sm text-emerald-600 hover:underline">Lihat
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Pengajuan Penarikan</h2>
+                <a href="#" class="text-sm text-emerald-600 dark:text-emerald-400 hover:underline">Lihat
                     Semua</a>
             </div>
             <div class="space-y-3">
-                <div class="p-3 bg-gray-50 rounded-lg">
+                <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div class="flex justify-between items-start">
                         <div class="flex items-center">
                             <img class="w-10 h-10 rounded-full" src="https://randomuser.me/api/portraits/men/1.jpg"
                                 alt="Nasabah">
                             <div class="ml-3">
-                                <p class="text-sm font-medium text-gray-900">Ahmad Suparman
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">Ahmad Suparman
                                 </p>
-                                <p class="text-xs text-gray-500">Bank Sampah Berseri</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Bank Sampah Berseri</p>
                             </div>
                         </div>
-                        <span class="px-2 py-1 text-xs font-medium bg-amber-100 text-amber-700 rounded-md">Rp
+                        <span
+                            class="px-2 py-1 text-xs font-medium bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-200 rounded-md">Rp
                             250.000</span>
                     </div>
                     <div class="flex justify-between mt-2">
-                        <span class="text-xs text-gray-500">Metode: DANA</span>
-                        <span class="text-xs text-gray-500">5 jam lalu</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Metode: DANA</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">5 jam lalu</span>
                     </div>
                 </div>
 
-                <div class="p-3 bg-gray-50 rounded-lg">
+                <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div class="flex justify-between items-start">
                         <div class="flex items-center">
                             <img class="w-10 h-10 rounded-full" src="https://randomuser.me/api/portraits/women/2.jpg"
                                 alt="Nasabah">
                             <div class="ml-3">
-                                <p class="text-sm font-medium text-gray-900">Siti Nurhaliza
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">Siti Nurhaliza
                                 </p>
-                                <p class="text-xs text-gray-500">Bank Sampah Lestari</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Bank Sampah Lestari</p>
                             </div>
                         </div>
-                        <span class="px-2 py-1 text-xs font-medium bg-amber-100 text-amber-700 rounded-md">Rp
+                        <span
+                            class="px-2 py-1 text-xs font-medium bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-200 rounded-md">Rp
                             175.000</span>
                     </div>
                     <div class="flex justify-between mt-2">
-                        <span class="text-xs text-gray-500">Metode: OVO</span>
-                        <span class="text-xs text-gray-500">10 jam lalu</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Metode: OVO</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">10 jam lalu</span>
                     </div>
                 </div>
 
-                <div class="p-3 bg-gray-50 rounded-lg">
+                <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div class="flex justify-between items-start">
                         <div class="flex items-center">
                             <img class="w-10 h-10 rounded-full" src="https://randomuser.me/api/portraits/men/3.jpg"
                                 alt="Nasabah">
                             <div class="ml-3">
-                                <p class="text-sm font-medium text-gray-900">Budi Santoso
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">Budi Santoso
                                 </p>
-                                <p class="text-xs text-gray-500">Bank Sampah Sejahtera
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Bank Sampah Sejahtera
                                 </p>
                             </div>
                         </div>
-                        <span class="px-2 py-1 text-xs font-medium bg-amber-100 text-amber-700 rounded-md">Rp
+                        <span
+                            class="px-2 py-1 text-xs font-medium bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-200 rounded-md">Rp
                             320.000</span>
                     </div>
                     <div class="flex justify-between mt-2">
-                        <span class="text-xs text-gray-500">Metode: Tunai</span>
-                        <span class="text-xs text-gray-500">1 hari lalu</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Metode: Tunai</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">1 hari lalu</span>
                     </div>
                 </div>
 
-                <div class="p-3 bg-gray-50 rounded-lg">
+                <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div class="flex justify-between items-start">
                         <div class="flex items-center">
                             <img class="w-10 h-10 rounded-full" src="https://randomuser.me/api/portraits/women/4.jpg"
                                 alt="Nasabah">
                             <div class="ml-3">
-                                <p class="text-sm font-medium text-gray-900">Rina Wati</p>
-                                <p class="text-xs text-gray-500">Bank Sampah Berseri</p>
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">Rina Wati</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Bank Sampah Berseri</p>
                             </div>
                         </div>
-                        <span class="px-2 py-1 text-xs font-medium bg-amber-100 text-amber-700 rounded-md">Rp
+                        <span
+                            class="px-2 py-1 text-xs font-medium bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-200 rounded-md">Rp
                             150.000</span>
                     </div>
                     <div class="flex justify-between mt-2">
-                        <span class="text-xs text-gray-500">Metode: GoPay</span>
-                        <span class="text-xs text-gray-500">2 hari lalu</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Metode: GoPay</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">2 hari lalu</span>
                     </div>
                 </div>
             </div>
@@ -214,16 +220,16 @@
     <!-- Bottom Section -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Statistik Jenis Sampah -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Statistik Jenis Sampah</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Statistik Jenis Sampah</h2>
             <div class="relative h-64">
                 <canvas id="chartJenisSampah" class="w-full h-full"></canvas>
             </div>
         </div>
 
         <!-- Pertumbuhan Saldo Nasabah -->
-        <div class="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Pertumbuhan Saldo Nasabah
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 lg:col-span-2">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Pertumbuhan Saldo Nasabah
             </h2>
             <div class="relative h-64">
                 <canvas id="chartPertumbuhanSaldo" class="w-full h-full"></canvas>

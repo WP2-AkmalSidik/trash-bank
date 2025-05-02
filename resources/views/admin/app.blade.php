@@ -12,10 +12,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     @vite('resources/css/app.css')
     @include('admin.assets.script')
-    <link rel="stylesheet" href="{{ asset('css/admin_style.css') }}">
+    @include('admin.assets.style')
 </head>
 
-<body class="font-sans antialiased min-h-screen bg-light transition-colors duration-300">
+<body class="font-sans antialiased min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
     @include('admin.components.sidebar')
     <!-- Main Content -->
     <div class="lg:ml-64 transition-all duration-300">
@@ -29,22 +29,23 @@
         </main>
 
         <!-- Footer -->
-        <footer class="bg-white shadow-md mt-6">
+        <footer class="bg-white dark:bg-gray-800 shadow-md mt-6">
             <div class="max-w-full mx-auto px-4 py-6 md:flex md:items-center md:justify-between">
                 <div class="flex justify-center md:justify-start">
-                    <span class="text-sm text-gray-500">© 2025 Bank Sampah - Ciherang Tunas Mulia</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">© 2025 Bank Sampah - Ciherang Tunas Mulia</span>
                 </div>
             </div>
         </footer>
     </div>
-    <script src="{{ asset('js/sidebar.js') }}"></script>
+    @include('admin.assets.sidebarjs')
     <!-- Chart.js script -->
     @if (request()->routeIs('admin.dashboard'))
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            Chart.defaults.color = document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151';
+        </script>
         @include('admin.assets.chart')
     @endif
-
-
 </body>
 
 </html>
