@@ -6,37 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - Bank Sampah</title>
     @vite('resources/css/app.css')
-    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
-    <script>
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const eyeOpen = document.getElementById('eye-open');
-            const eyeClosed = document.getElementById('eye-closed');
-
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeOpen.classList.add('hidden');
-                eyeClosed.classList.remove('hidden');
-            } else {
-                passwordInput.type = 'password';
-                eyeOpen.classList.remove('hidden');
-                eyeClosed.classList.add('hidden');
-            }
-        }
-        document.addEventListener("DOMContentLoaded", function () {
-            const inputs = document.querySelectorAll("#email, #password");
-
-            inputs.forEach(input => {
-                input.addEventListener("input", () => {
-                    if (input.value.trim() !== "") {
-                        input.classList.add("input-valid");
-                    } else {
-                        input.classList.remove("input-valid");
-                    }
-                });
-            });
-        });
-    </script>
+    @include('auth.assets.style')
+    @include('auth.assets.script')
 </head>
 
 <body class="min-h-screen bg-light flex justify-center overflow-x-hidden">

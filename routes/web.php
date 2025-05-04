@@ -1,17 +1,21 @@
 <?php
 
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\User\DashboardController as UserDashboardController;
-use App\Http\Controllers\User\UserController;
-use App\Http\Controllers\NasabahController;
-use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NasabahController;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\PengajuanController;
+use App\Http\Controllers\User\TransaksiController;
+use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 
-Route::get('/', function() {
+Route::get('/', function () {
     return view('auth.login');
 });
-
+// Route::get('/beranda', [UserDashboardController::class, 'beranda'])->name('beranda');
+// Route::get('/pengajuan', [UserDashboardController::class, 'pengajuan'])->name('pengajuan');
+// Route::get('/transaksi', [UserDashboardController::class, 'transaksi'])->name('transaksi');
+// Route::get('/profil', [UserDashboardController::class, 'profil'])->name('profil');
 // Auth routes
 Route::controller(AuthController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
@@ -30,4 +34,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 // User routes
 Route::prefix('user')->middleware(['auth', 'role:member'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('user.pengajuan');
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('user.transaksi');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile');
 });
