@@ -1,23 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\NasabahController;
+use App\Http\Controllers\Admin\NasabahController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\PengajuanController;
 use App\Http\Controllers\User\TransaksiController;
+use App\Http\Controllers\Authentication\AuthController as AuthenticationController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 
 Route::get('/', function () {
     return view('auth.login');
 });
-// Route::get('/beranda', [UserDashboardController::class, 'beranda'])->name('beranda');
-// Route::get('/pengajuan', [UserDashboardController::class, 'pengajuan'])->name('pengajuan');
-// Route::get('/transaksi', [UserDashboardController::class, 'transaksi'])->name('transaksi');
-// Route::get('/profil', [UserDashboardController::class, 'profil'])->name('profil');
-// Auth routes
-Route::controller(AuthController::class)->group(function () {
+
+Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'login')
         ->middleware(['throttle:5,1']) // Maksimal 5 percobaan login dalam 1 menit

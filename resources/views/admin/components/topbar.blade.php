@@ -61,14 +61,12 @@
                 <!-- Profile dropdown -->
                 <div class="relative ml-3">
                     <div class="dropdown">
-                        <button
-                            class="flex items-center text-sm rounded-full focus:outline-none focus:shadow-outline dark:text-white">
+                        <button class="flex items-center text-sm rounded-full focus:outline-none focus:shadow-outline dark:text-white">
                             <img class="h-8 w-8 rounded-full border-2 border-primary dark:border-secondary"
                                 src="https://randomuser.me/api/portraits/men/7.jpg" alt="User">
                             <span class="ml-2 text-gray-700 dark:text-gray-100 hidden sm:block">Akmal Sidik</span>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="w-4 h-4 ml-1 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" stroke-width="1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1 text-gray-700 dark:text-gray-300" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                             </svg>
                         </button>
@@ -79,8 +77,19 @@
                             <a href="/pengaturan"
                                 class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600">Pengaturan</a>
                             <div class="border-t border-gray-200 dark:border-gray-600"></div>
-                            <a href="/logout"
-                                class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600">Logout</a>
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit"
+                                    class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6A2.25 2.25 0 0015.75 18.75V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                                    </svg>
+                                    Logout
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
