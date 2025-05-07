@@ -63,8 +63,8 @@
                     <div class="dropdown">
                         <button class="flex items-center text-sm rounded-full focus:outline-none focus:shadow-outline dark:text-white">
                             <img class="h-8 w-8 rounded-full border-2 border-primary dark:border-secondary"
-                                src="https://randomuser.me/api/portraits/men/7.jpg" alt="User">
-                            <span class="ml-2 text-gray-700 dark:text-gray-100 hidden sm:block">Akmal Sidik</span>
+                                src="https://randomuser.me/api/portraits/women/2.jpg" alt="User">
+                            <span class="ml-2 text-gray-700 dark:text-gray-100 hidden sm:block">Yosi Nurkhofifah</span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1 text-gray-700 dark:text-gray-300" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
