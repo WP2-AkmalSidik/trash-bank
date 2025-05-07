@@ -13,7 +13,6 @@ class Deposit extends Model
         'waste_type_id',
         'weight_kg',
         'total_price',
-        'deposited_at',
     ];
 
     // Relasi: 1 Deposit milik 1 MemberAccount

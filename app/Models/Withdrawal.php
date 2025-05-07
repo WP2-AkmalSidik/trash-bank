@@ -14,7 +14,6 @@ class Withdrawal extends Model
         'ewallet_type',
         'ewallet_number',
         'status',
-        'requested_at',
     ];
 
     // Relasi: 1 Withdrawal milik 1 MemberAccount

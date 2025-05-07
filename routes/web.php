@@ -25,6 +25,11 @@ Route::controller(AuthenticationController::class)->group(function () {
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/nasabah', [NasabahController::class, 'index'])->name('nasabah');
+    Route::post('/nasabah', [NasabahController::class, 'store'])->name('nasabah.store');
+    Route::post('/nasabah/generate-account', [NasabahController::class, 'generateAccountNumber'])->name('nasabah.generate-account');
+    Route::get('/nasabah/{id}/edit', [NasabahController::class, 'edit'])->name('nasabah.edit');
+    Route::put('/nasabah/{id}', [NasabahController::class, 'update'])->name('nasabah.update');
+    Route::delete('/nasabah/{id}', [NasabahController::class, 'destroy'])->name('nasabah.destroy');
 });
 
 // User routes

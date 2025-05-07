@@ -9,7 +9,6 @@ class MemberAccount extends Model
     protected $fillable = [
         'user_id',
         'account_number',
-        'opened_at',
     ];
 
     // Relasi: 1 MemberAccount milik 1 User
