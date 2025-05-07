@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('ewallet_type')->nullable();
             $table->string('ewallet_number')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->timestamp('requested_at');
             $table->timestamps();
         });
     }
