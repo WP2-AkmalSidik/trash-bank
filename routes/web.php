@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\SampahController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\NasabahController;
 use App\Http\Controllers\User\ProfileController;
@@ -31,6 +32,12 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/nasabah/{id}/edit', [NasabahController::class, 'edit'])->name('nasabah.edit');
     Route::put('/nasabah/{id}', [NasabahController::class, 'update'])->name('nasabah.update');
     Route::delete('/nasabah/{id}', [NasabahController::class, 'destroy'])->name('nasabah.destroy');
+    // Waste Management Routes
+    Route::get('/sampah', [SampahController::class, 'index'])->name('sampah.index');
+    Route::post('/sampah', [SampahController::class, 'store'])->name('sampah.store');
+    Route::get('/sampah/{id}', [SampahController::class, 'show'])->name('sampah.show');
+    Route::put('/sampah/{id}', [SampahController::class, 'update'])->name('sampah.update');
+    Route::delete('/sampah/{id}', [SampahController::class, 'destroy'])->name('sampah.destroy');
 });
 
 // User routes

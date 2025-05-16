@@ -83,8 +83,8 @@
 
                 <!-- Kelola Jenis Sampah -->
                 <li>
-                    <a href="/jenis-sampah"
-                        class="nav-link flex items-center p-2 text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <a href="{{ route('sampah.index') }}"
+                        class="nav-link flex items-center p-2 text-base font-medium rounded-lg {{ request()->routeIs('sampah.*') ? 'bg-gray-100 dark:bg-gray-700 text-primary dark:text-secondary font-semibold' : 'text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-6 h-6 text-primary dark:text-secondary">
                             <path stroke-linecap="round" stroke-linejoin="round"
