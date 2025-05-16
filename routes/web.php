@@ -24,6 +24,7 @@ Route::controller(AuthenticationController::class)->group(function () {
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    // Nasabah
     Route::get('/nasabah', [NasabahController::class, 'index'])->name('nasabah');
     Route::post('/nasabah', [NasabahController::class, 'store'])->name('nasabah.store');
     Route::post('/nasabah/generate-account', [NasabahController::class, 'generateAccountNumber'])->name('nasabah.generate-account');

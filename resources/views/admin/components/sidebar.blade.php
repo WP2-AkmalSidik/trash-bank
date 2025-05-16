@@ -6,7 +6,7 @@
         <div class="flex items-center justify-center p-4 border-b border-gray-200 dark:border-gray-700">
             <img src="{{ asset('bs_ciherang.svg') }}" alt="Logo Bank Sampah" class="h-10 w-auto mr-3">
             <div>
-                <h1 class="text-lg font-bold text-primary dark:text-secondary">TRASH BANK</h1>
+                <h1 class="text-lg font-bold text-primary dark:text-secondary">BANKSAL</h1>
                 <p class="text-xs text-gray-600 dark:text-gray-400">Ciherang Tunas Mulia</p>
             </div>
         </div>

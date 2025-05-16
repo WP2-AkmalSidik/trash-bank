@@ -30,8 +30,13 @@ class NasabahController extends Controller
 
         $nasabahList = $nasabahQuery->paginate(10);
 
+        if ($request->ajax()) {
+            return view('admin.nasabah.components.table', compact('nasabahList'))->render();
+        }
+
         return view('admin.nasabah.management-nasabah', compact('nasabahList'));
     }
+
 
     public function store(Request $request)
     {

@@ -124,6 +124,39 @@
             </div>
         </div>
     </section>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let delayTimer;
+        $('input[name="search"]').on('keyup', function () {
+            clearTimeout(delayTimer);
+            let search = $(this).val();
+
+            delayTimer = setTimeout(() => {
+                $.ajax({
+                    url: "{{ route('nasabah') }}",
+                    type: "GET",
+                    data: { search },
+                    success: function (data) {
+                        $('.overflow-x-auto').html(data);
+                    }
+                });
+            }, 300); // delay 300ms (debounce)
+        });
+        $(document).on('click', '.pagination a', function (e) {
+                e.preventDefault();
+                let url = $(this).attr('href');
+                let search = $('input[name="search"]').val();
+
+                $.ajax({
+                    url: url,
+                    data: { search },
+                    success: function (data) {
+                        $('.overflow-x-auto').html(data);
+                    }
+                });
+            });
+
+    </script>
     @include('admin.nasabah.components.modal-tambah-nasabah')
     @include('admin.nasabah.components.modal-edit-nasabah')
     @include('admin.nasabah.components.modal-hapus-nasabah')
