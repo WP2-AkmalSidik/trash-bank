@@ -64,7 +64,7 @@
                     </button>
                     <ul id="dropdown-transaksi" class="dropdown-menu hidden space-y-2">
                         <li>
-                            <a href="/transaksi/tabungan"
+                            <a href="{{ route('transaksi.index') }}"
                                 class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Catat
                                 Tabungan</a>
                         </li>

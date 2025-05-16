@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\Admin\SampahController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\NasabahController;
+use App\Http\Controllers\Admin\SampahController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\Admin\NasabahController;
+use App\Http\Controllers\Admin\TabunganController;
 use App\Http\Controllers\User\PengajuanController;
 use App\Http\Controllers\User\TransaksiController;
-use App\Http\Controllers\Authentication\AuthController as AuthenticationController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Authentication\AuthController as AuthenticationController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -25,6 +26,17 @@ Route::controller(AuthenticationController::class)->group(function () {
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    // Waste Deposit Transaction Routes
+    Route::prefix('transaksi')->group(function () {
+        Route::get('/', [TabunganController::class, 'index'])->name('transaksi.index');
+        Route::post('/store', [TabunganController::class, 'store'])->name('transaksi.store');
+        Route::get('/get-member-data', [TabunganController::class, 'getMemberData'])->name('transaksi.get-member-data');
+        Route::get('/get-waste-price', [TabunganController::class, 'getWastePrice'])->name('transaksi.get-waste-price');
+        Route::get('/history/{memberId}', [TabunganController::class, 'history'])->name('transaksi.history');
+        Route::get('/print-receipt/{id}', [TabunganController::class, 'printReceipt'])->name('transaksi.print-receipt');
+        Route::get('/print-history/{memberId}', [TabunganController::class, 'printHistory'])->name('transaksi.print-history');
+        
+    });
     // Nasabah
     Route::get('/nasabah', [NasabahController::class, 'index'])->name('nasabah');
     Route::post('/nasabah', [NasabahController::class, 'store'])->name('nasabah.store');
