@@ -23,7 +23,8 @@
                 @csrf
                 <div class="p-6 space-y-4">
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama
+                        <label for="name"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama
                             Lengkap</label>
                         <input type="text" id="name" name="name" required
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:text-white">
@@ -97,13 +98,13 @@
     // Generate account number
     function generateAccountNumber() {
         fetch("{{ route('nasabah.generate-account') }}", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        })
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
             .then(response => response.json())
             .then(data => {
                 document.getElementById('account_number').value = data.account_number;
@@ -111,19 +112,28 @@
     }
 
     // Form submission
-    document.getElementById('tambahNasabahForm').addEventListener('submit', function (e) {
+    document.getElementById('tambahNasabahForm').addEventListener('submit', function(e) {
         e.preventDefault();
+
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+
+        // Show loading state
+        submitButton.disabled = true;
+        submitButton.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin"></i> Memproses...
+        `;
 
         const formData = new FormData(this);
 
         fetch("{{ route('nasabah.store') }}", {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            }
-        })
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -131,9 +141,10 @@
                         icon: 'success',
                         title: 'Berhasil!',
                         text: data.message,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
+                        showConfirmButton: false,
+                        timer: 1500,
+                        timerProgressBar: true,
+                        willClose: () => {
                             window.location.href = data.redirect;
                         }
                     });
@@ -141,7 +152,8 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal!',
-                        text: data.message
+                        html: data.message || 'Terjadi kesalahan saat menambahkan nasabah',
+                        confirmButtonText: 'OK'
                     });
                 }
             })
@@ -150,8 +162,12 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Terjadi kesalahan saat menyimpan perubahan'
+                    text: 'Terjadi kesalahan saat menyimpan data'
                 });
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
             });
     });
 </script>

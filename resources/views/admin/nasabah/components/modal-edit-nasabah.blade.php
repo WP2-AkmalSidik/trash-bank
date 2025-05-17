@@ -82,11 +82,11 @@
     // Modal Edit functions
     function openEditModal(id) {
         fetch(`/admin/nasabah/${id}/edit`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        })
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
             .then(response => response.json())
             .then(data => {
                 document.getElementById('edit_id').value = data.id;
@@ -110,21 +110,31 @@
     }
 
     // Form submission edit
-    document.getElementById('editNasabahForm').addEventListener('submit', function (e) {
+    // Form submission edit
+    document.getElementById('editNasabahForm').addEventListener('submit', function(e) {
         e.preventDefault();
+
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+
+        // Show loading state
+        submitButton.disabled = true;
+        submitButton.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin"></i> Memproses...
+        `;
 
         const formData = new FormData(this);
         const id = document.getElementById('edit_id').value;
 
         fetch(`/admin/nasabah/${id}`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json',
-                'X-HTTP-Method-Override': 'PUT'
-            }
-        })
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'X-HTTP-Method-Override': 'PUT'
+                }
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -132,9 +142,10 @@
                         icon: 'success',
                         title: 'Berhasil!',
                         text: data.message,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
+                        showConfirmButton: false,
+                        timer: 1500,
+                        timerProgressBar: true,
+                        willClose: () => {
                             window.location.href = data.redirect;
                         }
                     });
@@ -142,13 +153,22 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal!',
-                        text: data.message
+                        html: data.message || 'Terjadi kesalahan saat memperbarui data',
+                        confirmButtonText: 'OK'
                     });
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan saat menyimpan perubahan');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Terjadi kesalahan saat menyimpan perubahan'
+                });
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
             });
     });
 </script>

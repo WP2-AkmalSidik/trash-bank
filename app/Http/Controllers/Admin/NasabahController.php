@@ -79,10 +79,24 @@ class NasabahController extends Controller
 
     public function generateAccountNumber()
     {
-        $accountNumber = 'BS' . date('Ymd') . Str::random(4);
+        $maxAttempts = 10;
+        $attempt = 0;
+
+        do {
+            $accountNumber = 'BS' . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+            $exists = MemberAccount::where('account_number', $accountNumber)->exists();
+            $attempt++;
+
+            if ($attempt >= $maxAttempts) {
+                // Jika setelah 10x masih belum dapat yg unik, tambah digit
+                $accountNumber = 'BS' . mt_rand(10000, 99999);
+                $exists = false; // Reset pengecekan
+            }
+        } while ($exists);
 
         return response()->json([
-            'account_number' => $accountNumber
+            'account_number' => $accountNumber,
+            'status' => 'success'
         ]);
     }
     public function edit($id)
@@ -127,7 +141,7 @@ class NasabahController extends Controller
             ], 500);
         }
     }
-    // app/Http/Controllers/Admin/NasabahController.php
+
     public function destroy($id)
     {
         try {

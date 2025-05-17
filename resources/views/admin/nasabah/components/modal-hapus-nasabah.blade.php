@@ -31,7 +31,7 @@
                     class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-600 dark:text-white dark:border-gray-600">
                     Batal
                 </button>
-                <button type="button" onclick="confirmDelete()"
+                <button type="button" onclick="processDelete()" id="deleteButton"
                     class="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition">
                     Hapus
                 </button>
@@ -39,6 +39,7 @@
         </div>
     </div>
 </div>
+
 <script>
     // Variabel global untuk menyimpan ID yang akan dihapus
     let nasabahIdToDelete = null;
@@ -57,8 +58,17 @@
         nasabahIdToDelete = null;
     }
 
-    function confirmDelete() {
+    function processDelete() {
         if (!nasabahIdToDelete) return;
+
+        const deleteButton = document.getElementById('deleteButton');
+        const originalText = deleteButton.innerHTML;
+        
+        // Show loading state
+        deleteButton.disabled = true;
+        deleteButton.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin"></i> Menghapus...
+        `;
 
         fetch(`/admin/nasabah/${nasabahIdToDelete}`, {
             method: 'POST',
@@ -68,56 +78,67 @@
                 'X-HTTP-Method-Override': 'DELETE'
             }
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: data.message,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = data.redirect;
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: data.message
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Terhapus!',
+                    text: data.message,
+                    showConfirmButton: false,
+                    timer: 1500,
+                    timerProgressBar: true,
+                    willClose: () => {
+                        window.location.href = data.redirect;
+                    }
+                });
+            } else {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error!',
-                    text: 'Terjadi kesalahan saat menyimpan perubahan'
+                    title: 'Gagal!',
+                    text: data.message || 'Gagal menghapus nasabah',
+                    confirmButtonText: 'OK'
                 });
-            })
-            .finally(() => {
-                closeDeleteModal();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Terjadi kesalahan saat menghapus data'
             });
+        })
+        .finally(() => {
+            closeDeleteModal();
+            deleteButton.disabled = false;
+            deleteButton.innerHTML = originalText;
+        });
     }
 </script>
+
 <style>
     /* Untuk animasi modal */
-@keyframes modalFadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+    @keyframes modalFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
-#deleteNasabahModal {
-    animation: modalFadeIn 0.3s ease-out;
-}
+    #deleteNasabahModal {
+        animation: modalFadeIn 0.3s ease-out;
+    }
 
-/* Warna tombol hapus */
-.bg-red-600 {
-    background-color: #dc2626;
-}
-.hover\:bg-red-700:hover {
-    background-color: #b91c1c;
-}
+    /* Warna tombol hapus */
+    .bg-red-600 {
+        background-color: #dc2626;
+    }
+    .hover\:bg-red-700:hover {
+        background-color: #b91c1c;
+    }
 </style>
