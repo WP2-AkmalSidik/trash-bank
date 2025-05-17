@@ -12,7 +12,7 @@
                     </div>
                     <input type="text" name="search" value="{{ request('search') }}"
                         placeholder="Cari nama, no. akun, atau no. HP..."
-                        class="pl-10 w-full px-4 py-2 rounded-lg border border-gray-200 bg-white placeholder-gray-400 dark:placeholder-gray-300 dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-primary dark:text-white dark:focus:ring-emerald-500 focus:border-primary dark:focus:border-emerald-500" />
+                        class="pl-10 w-full px-4 py-2 rounded-lg border border-gray-200 bg-white placeholder-gray-400 dark:placeholder-gray-300 dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-primary dark:text-white dark:focus:ring-secondary focus:border-primary dark:focus:border-secondary" />
                 </form>
 
                 <div class="flex gap-3">

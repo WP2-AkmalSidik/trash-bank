@@ -1,10 +1,6 @@
 @extends('admin.app')
 @section('title', 'Pengajuan Penarikan Saldo')
 
-@push('styles')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-@endpush
-
 @section('content')
     <section class="bg-white dark:bg-gray-800 rounded-lg shadow-md min-h-[calc(100vh-8rem)] p-4 md:p-6">
         <div class="mx-auto">
