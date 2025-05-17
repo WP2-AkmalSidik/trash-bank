@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class SampahController extends Controller
 {
-    /**
-     * Display a listing of the waste types.
-     */
     public function index(Request $request)
     {
         $search = $request->search;
@@ -20,7 +17,7 @@ class SampahController extends Controller
                 $query->where('name', 'like', "%{$search}%");
             })
             ->orderBy('name')
-            ->paginate(10);
+            ->paginate(5);
         
         if ($request->ajax()) {
             return view('admin.sampah.components.waste-table', compact('wasteTypes'))->render();
@@ -29,9 +26,6 @@ class SampahController extends Controller
         return view('admin.sampah.management-sampah', compact('wasteTypes'));
     }
 
-    /**
-     * Store a newly created waste type in storage.
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -46,25 +40,15 @@ class SampahController extends Controller
             ], 422);
         }
 
-        $wasteType = WasteType::create([
-            'name' => $request->name,
-            'price_per_kg' => $request->price_per_kg,
+        $wasteType = WasteType::create($request->only(['name', 'price_per_kg']));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Jenis sampah berhasil ditambahkan',
+            'data' => $wasteType
         ]);
-
-        if ($request->ajax()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Jenis sampah berhasil ditambahkan',
-                'data' => $wasteType
-            ]);
-        }
-
-        return redirect()->route('admin.sampah')->with('success', 'Jenis sampah berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified waste type.
-     */
     public function show($id)
     {
         $wasteType = WasteType::findOrFail($id);
@@ -75,9 +59,6 @@ class SampahController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified waste type in storage.
-     */
     public function update(Request $request, $id)
     {
         $wasteType = WasteType::findOrFail($id);
@@ -94,25 +75,15 @@ class SampahController extends Controller
             ], 422);
         }
 
-        $wasteType->update([
-            'name' => $request->name,
-            'price_per_kg' => $request->price_per_kg,
+        $wasteType->update($request->only(['name', 'price_per_kg']));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Jenis sampah berhasil diperbarui',
+            'data' => $wasteType
         ]);
-
-        if ($request->ajax()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Jenis sampah berhasil diperbarui',
-                'data' => $wasteType
-            ]);
-        }
-
-        return redirect()->route('admin.sampah')->with('success', 'Jenis sampah berhasil diperbarui');
     }
 
-    /**
-     * Remove the specified waste type from storage.
-     */
     public function destroy($id)
     {
         $wasteType = WasteType::findOrFail($id);

@@ -1,21 +1,11 @@
 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
     <thead class="bg-gray-100 dark:bg-gray-700">
         <tr>
-            <th scope="col"
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                #</th>
-            <th scope="col"
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Jenis Sampah</th>
-            <th scope="col"
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Harga per Kg</th>
-            <th scope="col"
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Terakhir Diperbarui</th>
-            <th scope="col"
-                class="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Aksi</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">#</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Jenis Sampah</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Harga per Kg</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Terakhir Diperbarui</th>
+            <th scope="col" class="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Aksi</th>
         </tr>
     </thead>
     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
@@ -58,7 +48,6 @@
     </tbody>
 </table>
 
-<!-- Pagination -->
 @if($wasteTypes->hasPages())
     <div class="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div class="text-sm text-gray-600 dark:text-gray-300">
@@ -72,7 +61,7 @@
         </div>
 
         <div class="flex items-center">
-            {{ $wasteTypes->onEachSide(1)->links('admin.components.pagination') }}
+            {{ $wasteTypes->onEachSide(1)->links('admin.sampah.components.pagination') }}
         </div>
     </div>
 @endif

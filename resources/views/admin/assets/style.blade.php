@@ -62,4 +62,35 @@
     .dropdown:hover .dropdown-content {
         display: block;
     }
+
+    .spinner {
+        width: 20px;
+        height: 20px;
+        margin-right: 8px;
+        border: 2px solid transparent;
+        border-top-color: currentColor;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loading-overlay {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(255, 255, 255, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        border-radius: 0.5rem;
+    }
+
+    .dark .loading-overlay {
+        background-color: rgba(31, 41, 55, 0.7);
+    }
 </style>
