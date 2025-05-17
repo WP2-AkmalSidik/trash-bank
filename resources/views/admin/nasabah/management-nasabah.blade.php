@@ -8,11 +8,11 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <form class="relative w-full md:w-1/3" method="GET" action="{{ route('nasabah') }}">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <i class="fa-solid fa-search text-gray-400"></i>
+                        <i class="fa-solid fa-search text-gray-500 dark:text-gray-200"></i>
                     </div>
                     <input type="text" name="search" value="{{ request('search') }}"
                         placeholder="Cari nama, no. akun, atau no. HP..."
-                        class="pl-10 w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 focus:ring-primary focus:border-primary focus:outline-none bg-white dark:bg-gray-600 text-gray-800 dark:text-white" />
+                        class="pl-10 w-full px-4 py-2 rounded-lg border border-gray-200 bg-white placeholder-gray-400 dark:placeholder-gray-300 dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-primary dark:text-white dark:focus:ring-emerald-500 focus:border-primary dark:focus:border-emerald-500" />
                 </form>
 
                 <div class="flex gap-3">

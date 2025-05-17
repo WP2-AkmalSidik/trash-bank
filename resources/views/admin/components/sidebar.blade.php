@@ -44,41 +44,46 @@
                     </a>
                 </li>
 
-                <!-- Transaksi Tabungan -->
+                <!-- Catat Tabungan -->
                 <li>
-                    <button type="button"
-                        class="nav-link flex items-center p-2 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        aria-controls="dropdown-transaksi" data-collapse-toggle="dropdown-transaksi">
+                    <a href="{{ route('transaksi.index') }}"
+                        class="nav-link flex items-center p-2 text-base font-medium rounded-lg
+                        {{ request()->routeIs('transaksi.*') ? 'bg-gray-100 dark:bg-gray-700 text-primary dark:text-secondary font-semibold' : 'text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-6 h-6 text-primary dark:text-secondary">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
                         </svg>
-                        <span class="flex-1 ml-3 text-left whitespace-nowrap">Transaksi</span>
-                        <svg class="w-6 h-6 dropdown-icon" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"></path>
+                        <span class="ml-3">Catat Tabungan</span>
+                    </a>
+                </li>
+
+                <!-- Pengajuan Penarikan -->
+                <li>
+                    <a href="{{ route('pengajuan.index') }}"
+                        class="nav-link flex items-center p-2 text-base font-medium rounded-lg
+                        {{ request()->routeIs('pengajuan.*') ? 'bg-gray-100 dark:bg-gray-700 text-primary dark:text-secondary font-semibold' : 'text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6 text-primary dark:text-secondary">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
                         </svg>
-                    </button>
-                    <ul id="dropdown-transaksi" class="dropdown-menu hidden space-y-2">
-                        <li>
-                            <a href="{{ route('transaksi.index') }}"
-                                class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Catat
-                                Tabungan</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('pengajuan.index') }}"
-                                class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Pengajuan
-                                Penarikan</a>
-                        </li>
-                        <li>
-                            <a href="/transaksi/history"
-                                class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Riwayat
-                                Transaksi</a>
-                        </li>
-                    </ul>
+                        <span class="ml-3">Pengajuan Penarikan</span>
+                    </a>
+                </li>
+
+                <!-- Riwayat Transaksi -->
+                <li>
+                    <a href="/transaksi/history"
+                        class="nav-link flex items-center p-2 text-base font-medium rounded-lg
+                        {{ request()->is('transaksi/history*') ? 'bg-gray-100 dark:bg-gray-700 text-primary dark:text-secondary font-semibold' : 'text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6 text-primary dark:text-secondary">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="ml-3">Riwayat Transaksi</span>
+                    </a>
                 </li>
 
                 <!-- Kelola Jenis Sampah -->
@@ -114,17 +119,17 @@
                     </button>
                     <ul id="dropdown-laporan" class="dropdown-menu hidden space-y-2">
                         <li>
-                            <a href="/laporan/transaksi"
+                            <a href="#"
                                 class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Laporan
                                 Transaksi</a>
                         </li>
                         <li>
-                            <a href="/laporan/keuangan"
+                            <a href="#"
                                 class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Laporan
                                 Keuangan</a>
                         </li>
                         <li>
-                            <a href="/laporan/sampah"
+                            <a href="#"
                                 class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Laporan
                                 Sampah</a>
                         </li>
@@ -132,7 +137,7 @@
                 </li>
 
                 <!-- Pengaturan -->
-                <li>
+                {{-- <li>
                     <button type="button"
                         class="nav-link flex items-center p-2 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                         aria-controls="dropdown-pengaturan" data-collapse-toggle="dropdown-pengaturan">
@@ -161,7 +166,7 @@
                                 Pengguna</a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
             </ul>
         </nav>
 
