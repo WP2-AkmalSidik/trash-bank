@@ -33,7 +33,19 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'redirect' => $this->getRedirectUrlBasedOnRole(Auth::user())
+                ]);
+            }
+
             return $this->redirectBasedOnRole(Auth::user());
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Email atau password yang Anda masukkan salah.'
+            ], 401);
         }
 
         return back()->withErrors([
@@ -42,15 +54,23 @@ class AuthController extends Controller
     }
 
     /**
+     * Get redirect URL based on role.
+     */
+    private function getRedirectUrlBasedOnRole($user)
+    {
+        if ($user->isAdmin()) {
+            return route('admin.dashboard');
+        }
+
+        return route('user.dashboard');
+    }
+
+    /**
      * Redirect user based on role.
      */
     private function redirectBasedOnRole($user)
     {
-        if ($user->isAdmin()) {
-            return redirect()->route('admin.dashboard');
-        }
-
-        return redirect()->route('user.dashboard');
+        return redirect($this->getRedirectUrlBasedOnRole($user));
     }
 
     /**
