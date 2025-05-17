@@ -51,6 +51,83 @@
         </script>
         @include('admin.assets.chart')
     @endif
+    <script>
+        function showSuccessAlert(message, callback = null) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: message,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed && callback) {
+                    callback();
+                }
+            });
+        }
+
+        /**
+         * Display an error message
+         * @param {string} message - The error message to display
+         */
+        function showErrorAlert(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: message,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        /**
+         * Display a confirmation dialog
+         * @param {string} title - The title of the confirmation dialog
+         * @param {string} text - The text of the confirmation dialog
+         * @param {string} confirmButtonText - The text for the confirm button
+         * @param {function} callback - The function to execute if confirmed
+         */
+        function showConfirmationAlert(title, text, confirmButtonText, callback) {
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: confirmButtonText,
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    callback();
+                }
+            });
+        }
+
+        /**
+         * Display a toast notification
+         * @param {string} message - The message to display
+         * @param {string} icon - The icon to display (success, error, warning, info)
+         */
+        function showToast(message, icon = 'success') {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            Toast.fire({
+                icon: icon,
+                title: message
+            });
+        }
+    </script>
 </body>
 
 </html>

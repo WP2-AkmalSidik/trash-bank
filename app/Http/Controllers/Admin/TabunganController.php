@@ -92,19 +92,38 @@ class TabunganController extends Controller
             $wasteType = WasteType::findOrFail($request->waste_type_id);
             $totalPrice = $wasteType->price_per_kg * $request->weight_kg;
 
-            Deposit::create([
+            $deposit = Deposit::create([
                 'member_account_id' => $request->member_account_id,
                 'waste_type_id' => $request->waste_type_id,
                 'weight_kg' => $request->weight_kg,
                 'total_price' => $totalPrice,
             ]);
 
+            $memberAccount = MemberAccount::with('user')->find($request->member_account_id);
+            $memberName = $memberAccount->user->name ?? 'Nasabah';
+
             DB::commit();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Transaksi setoran sampah berhasil disimpan!',
+                    'deposit_id' => $deposit->id
+                ]);
+            }
 
             return redirect()->route('transaksi.index')
                 ->with('success', 'Transaksi setoran sampah berhasil disimpan!');
         } catch (\Exception $e) {
             DB::rollBack();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                ], 500);
+            }
+
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
@@ -167,10 +186,6 @@ class TabunganController extends Controller
             ->paginate(10);
 
         // Load wasteType untuk deposit
-        $depositIds = collect($transactions->items())
-            ->where('type', 'deposit')
-            ->pluck('id');
-
         $wasteTypes = WasteType::whereIn(
             'id',
             collect($transactions->items())
@@ -192,7 +207,7 @@ class TabunganController extends Controller
         $totalBalance = $totalDeposits - $totalWithdrawals;
 
         if ($request->ajax()) {
-            return view('admin.transaksi.components.history-table', compact('transactions'));
+            return view('admin.transaksi.tabungan.components.history-table', compact('transactions'));
         }
 
         return view('admin.transaksi.tabungan.history', compact('member', 'transactions', 'totalBalance'));
@@ -274,5 +289,46 @@ class TabunganController extends Controller
         ]);
 
         return $pdf->download('riwayat-transaksi-' . $member->memberAccount->account_number . '.pdf');
+    }
+
+    /**
+     * Delete a deposit transaction
+     */
+    public function destroy($id)
+    {
+        DB::beginTransaction();
+        try {
+            $deposit = Deposit::findOrFail($id);
+
+            // Dapatkan data member untuk response
+            $memberAccount = $deposit->memberAccount;
+            $memberId = $memberAccount->user_id;
+
+            // Hapus transaksi
+            $deposit->delete();
+
+            DB::commit();
+
+            // Hitung ulang saldo
+            $totalDeposits = $memberAccount->deposits()->sum('total_price');
+            $totalWithdrawals = $memberAccount->withdrawals()
+                ->where('status', 'approved')
+                ->sum('amount');
+            $balance = $totalDeposits - $totalWithdrawals;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Transaksi berhasil dihapus!',
+                'balance' => 'Rp ' . number_format($balance, 0, ',', '.'),
+                'transaction_id' => $id
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

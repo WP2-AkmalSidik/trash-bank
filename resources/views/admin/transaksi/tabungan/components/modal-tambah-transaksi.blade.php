@@ -74,7 +74,7 @@
                         class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                         Batal
                     </button>
-                    <button type="submit"
+                    <button type="button" onclick="submitTransaction()"
                         class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-opacity-90 transition">
                         Simpan Transaksi
                     </button>
@@ -96,6 +96,10 @@
             .then(response => response.json())
             .then(data => {
                 document.getElementById('current-balance').textContent = `Rp ${data.balance}`;
+            })
+            .catch(error => {
+                console.error('Error fetching member data:', error);
+                showErrorAlert('Gagal memuat data nasabah. Silakan coba lagi.');
             });
             
         // Reset form fields
@@ -131,5 +135,69 @@
             document.getElementById('price-per-kg').textContent = 'Rp 0';
             document.getElementById('total-amount').textContent = 'Rp 0';
         }
+    }
+    
+    // Submit transaction form with AJAX and SweetAlert
+    function submitTransaction() {
+        // Form validation
+        const form = document.getElementById('transaction-form');
+        const wasteTypeSelect = document.getElementById('waste_type_id');
+        const weightInput = document.getElementById('weight_kg');
+        
+        // Basic validation
+        if (!wasteTypeSelect.value) {
+            showErrorAlert('Pilih jenis sampah terlebih dahulu!');
+            return;
+        }
+        
+        if (!weightInput.value || parseFloat(weightInput.value) <= 0) {
+            showErrorAlert('Masukkan berat sampah yang valid!');
+            return;
+        }
+        
+        // Show loading state
+        Swal.fire({
+            title: 'Memproses...',
+            text: 'Sedang menyimpan transaksi',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        
+        // Prepare form data
+        const formData = new FormData(form);
+        
+        // Send AJAX request
+        fetch('{{ route('transaksi.store') }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Close modal
+                closeTransactionModal();
+                
+                // Show success message
+                showSuccessAlert(data.message, function() {
+                    // Refresh the page to show updated data
+                    window.location.reload();
+                });
+            } else {
+                showErrorAlert(data.message || 'Terjadi kesalahan. Silakan coba lagi.');
+            }
+        })
+        .catch(error => {
+            console.error('Error submitting transaction:', error);
+            showErrorAlert('Terjadi kesalahan. Silakan coba lagi.');
+        });
     }
 </script>

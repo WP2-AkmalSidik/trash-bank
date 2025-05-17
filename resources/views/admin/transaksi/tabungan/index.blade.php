@@ -16,30 +16,6 @@
                 </form>
             </div>
 
-            <!-- Alert Message -->
-            @if (session('success'))
-                <div id="alert-success"
-                    class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
-                    role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                    <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-                        <i onclick="document.getElementById('alert-success').remove()"
-                            class="fa-solid fa-times cursor-pointer"></i>
-                    </span>
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div id="alert-error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6"
-                    role="alert">
-                    <span class="block sm:inline">{{ session('error') }}</span>
-                    <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-                        <i onclick="document.getElementById('alert-error').remove()"
-                            class="fa-solid fa-times cursor-pointer"></i>
-                    </span>
-                </div>
-            @endif
-
             <!-- Tabel Nasabah -->
             <div class="overflow-x-auto">
                 @include('admin.transaksi.tabungan.components.member-table')
@@ -47,7 +23,6 @@
         </div>
     </section>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         let delayTimer;
         $('input[name="search"]').on('keyup', function() {
@@ -64,12 +39,13 @@
                 $.ajax({
                     url: "{{ route('transaksi.index') }}",
                     type: "GET",
-                    data: requestData, // Hanya kirim parameter jika ada pencarian
+                    data: requestData,
                     success: function(data) {
                         $('.overflow-x-auto').html(data);
                     },
                     error: function(xhr) {
                         console.error('Error:', xhr.responseText);
+                        showErrorAlert('Gagal memuat data. Silakan coba lagi.');
                     }
                 });
             }, 300);
@@ -90,15 +66,29 @@
                 url: url,
                 data: search ? {
                     search
-                } : {}, // Hanya kirim search jika tidak kosong
+                } : {},
                 success: function(data) {
                     $('.overflow-x-auto').html(data);
                 },
                 error: function(xhr) {
                     console.error('Error:', xhr.responseText);
+                    showErrorAlert('Gagal memuat data. Silakan coba lagi.');
                 }
             });
         });
+
+        // Display SweetAlert for success and error messages
+        @if (session('success'))
+            document.addEventListener('DOMContentLoaded', function() {
+                showSuccessAlert("{{ session('success') }}");
+            });
+        @endif
+
+        @if (session('error'))
+            document.addEventListener('DOMContentLoaded', function() {
+                showErrorAlert("{{ session('error') }}");
+            });
+        @endif
     </script>
 
     @include('admin.transaksi.tabungan.components.modal-tambah-transaksi')

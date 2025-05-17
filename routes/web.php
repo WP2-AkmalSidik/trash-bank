@@ -31,6 +31,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('transaksi')->group(function () {
         Route::get('/', [TabunganController::class, 'index'])->name('transaksi.index');
         Route::post('/store', [TabunganController::class, 'store'])->name('transaksi.store');
+        Route::delete('/histori/{id}', [TabunganController::class, 'destroy'])->name('transaksi.destroy');
         Route::get('/get-member-data', [TabunganController::class, 'getMemberData'])->name('transaksi.get-member-data');
         Route::get('/get-waste-price', [TabunganController::class, 'getWastePrice'])->name('transaksi.get-waste-price');
         Route::get('/history/{memberId}', [TabunganController::class, 'history'])->name('transaksi.history');

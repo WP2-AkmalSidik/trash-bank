@@ -28,7 +28,7 @@
                 <div class="flex items-center gap-2">
                     <div class="bg-blue-100 dark:bg-blue-900 px-4 py-2 rounded-lg">
                         <span class="text-gray-600 dark:text-gray-300">Total Saldo:</span>
-                        <span class="font-bold text-blue-600 dark:text-blue-300 ml-2">
+                        <span class="font-bold text-blue-600 dark:text-blue-300 ml-2 total-balance">
                             Rp {{ number_format($totalBalance, 0, ',', '.') }}
                         </span>
                     </div>
@@ -77,4 +77,92 @@
             </div>
         </div>
     </section>
+    <script>
+        // Fungsi konfirmasi hapus
+        function confirmDelete(transactionId) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Transaksi ini akan dihapus dan saldo nasabah akan dikurangi!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteTransaction(transactionId);
+                }
+            });
+        }
+
+        // Fungsi hapus transaksi
+        function deleteTransaction(transactionId) {
+            Swal.fire({
+                title: 'Menghapus Transaksi',
+                text: 'Sedang memproses...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            $.ajax({
+                url: `/admin/transaksi/histori/${transactionId}`,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: response.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                    // Hapus baris dari tabel
+                    $(`#transaction-row-${response.transaction_id}`).fadeOut(300, function() {
+                        $(this).remove();
+
+                        // Update saldo yang ditampilkan
+                        $('.total-balance').text(response.balance);
+
+                        // Jika tabel kosong, reload halaman
+                        if ($('tbody tr').length <= 1) {
+                            window.location.reload();
+                        }
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: xhr.responseJSON?.message || 'Terjadi kesalahan saat menghapus transaksi'
+                    });
+                }
+            });
+        }
+
+        // Handle print receipt dengan SweetAlert
+        $(document).on('click', '.print-receipt', function(e) {
+            e.preventDefault();
+            const url = $(this).attr('href');
+
+            Swal.fire({
+                title: 'Mempersiapkan Struk',
+                text: 'Sedang memuat data struk...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    window.open(url, '_blank');
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 1000);
+                }
+            });
+        });
+    </script>
 @endsection
