@@ -9,6 +9,7 @@ class MemberAccount extends Model
     protected $fillable = [
         'user_id',
         'account_number',
+        'balance',
     ];
 
     // Relasi: 1 MemberAccount milik 1 User
@@ -27,5 +28,33 @@ class MemberAccount extends Model
     public function withdrawals()
     {
         return $this->hasMany(Withdrawal::class);
+    }
+
+    public function calculateBalance()
+    {
+        // Menghitung total deposit
+        $totalDeposits = $this->deposits()->sum('total_price');
+        
+        // Menghitung total withdrawal yang disetujui
+        $totalWithdrawals = $this->withdrawals()
+            ->where('status', 'approved')
+            ->sum('amount');
+        
+        // Menghitung saldo
+        $balance = $totalDeposits - $totalWithdrawals;
+        
+        return $balance;
+    }
+
+    public function updateBalance()
+    {
+        $this->balance = $this->calculateBalance();
+        $this->save();
+    }
+
+    public function hasSufficientBalance($amount, $minimumBalance = 0)
+    {
+        $this->updateBalance();
+        return ($this->balance - $amount) >= $minimumBalance;
     }
 }

@@ -3,7 +3,8 @@
     <div class="w-full overflow-x-auto">
         <table class="w-full whitespace-no-wrap">
             <thead>
-                <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                <tr
+                    class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
                     <th class="px-4 py-3">Nasabah</th>
                     <th class="px-4 py-3">No. Rekening</th>
                     <th class="px-4 py-3">No. Telepon</th>
@@ -16,7 +17,8 @@
                     <tr class="text-gray-700 dark:text-gray-300">
                         <td class="px-4 py-3">
                             <div class="flex items-center">
-                                <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-gray-700 dark:text-gray-300 font-semibold text-lg mr-3">
+                                <div
+                                    class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-gray-700 dark:text-gray-300 font-semibold text-lg mr-3">
                                     {{ substr($member->name, 0, 1) }}
                                 </div>
                                 <div>
@@ -31,22 +33,26 @@
                             {{ $member->phone_number ?? '-' }}
                         </td>
                         <td class="px-4 py-3">
-                            <span class="font-semibold">
-                                <?php 
+                            @php
                                 $totalDeposits = $member->memberAccount->deposits->sum('total_price');
-                                echo 'Rp ' . number_format($totalDeposits, 0, ',', '.'); 
-                                ?>
+                                $totalWithdrawals = $member->memberAccount->withdrawals
+                                    ->where('status', 'approved')
+                                    ->sum('amount');
+                                $balance = $totalDeposits - $totalWithdrawals;
+                            @endphp
+                            <span class="font-semibold">
+                                Rp {{ number_format($balance, 0, ',', '.') }}
                             </span>
                         </td>
                         <td class="px-4 py-3">
                             <div class="flex items-center space-x-2">
-                                <button 
+                                <button
                                     onclick="openTransactionModal({{ $member->id }}, '{{ $member->name }}', {{ $member->memberAccount->id }})"
                                     class="px-2 py-1 rounded-md bg-green-500 text-white hover:bg-green-600 transition-colors flex items-center">
                                     <i class="fa-solid fa-plus mr-1"></i>Saldo
                                 </button>
-                                <a href="{{ route('transaksi.history', $member->id) }}" 
-                                   class="px-2 py-1 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors flex items-center">
+                                <a href="{{ route('transaksi.history', $member->id) }}"
+                                    class="px-2 py-1 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors flex items-center">
                                     <i class="fa-solid fa-clock-rotate-left me-1"></i>Riwayat
                                 </a>
                             </div>

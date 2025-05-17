@@ -28,8 +28,8 @@ class DatabaseSeeder extends Seeder
 
         // Member
         $member = User::create([
-            'name' => 'Member Satu',
-            'email' => 'member@trashbank.com',
+            'name' => 'Akmal',
+            'email' => 'akml@trashbank.com',
             'password' => Hash::make('password'),
             'role' => 'member',
             'phone_number' => '082345678901',

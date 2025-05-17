@@ -13,6 +13,7 @@ class Withdrawal extends Model
         'method',
         'ewallet_type',
         'ewallet_number',
+        'rejection_reason',
         'status',
     ];
 
@@ -22,13 +23,39 @@ class Withdrawal extends Model
         return $this->belongsTo(MemberAccount::class);
     }
 
-    // Method untuk mengurangi saldo jika penarikan disetujui
+    /**
+     * Method untuk mengurangi saldo jika penarikan disetujui
+     *
+     * @return bool
+     */
     public function approveWithdrawal()
     {
+        // Pastikan status adalah approved
         if ($this->status === 'approved') {
             $memberAccount = $this->memberAccount;
-            $memberAccount->balance -= $this->amount;
-            $memberAccount->save();
+            
+            // Periksa apakah saldo mencukupi
+            if ($memberAccount->hasSufficientBalance($this->amount, 0)) {
+                // Update saldo
+                $memberAccount->updateBalance();
+                return true;
+            }
+            return false;
         }
+        return false;
+    }
+    
+    /**
+     * Method untuk menolak penarikan
+     *
+     * @param string|null $reason Alasan penolakan
+     * @return bool
+     */
+    public function rejectWithdrawal($reason = null)
+    {
+        // Update status menjadi rejected
+        $this->status = 'rejected';
+        $this->rejection_reason = $reason;
+        return $this->save();
     }
 }

@@ -69,7 +69,7 @@
                                 Tabungan</a>
                         </li>
                         <li>
-                            <a href="/transaksi/pengajuan"
+                            <a href="{{ route('pengajuan.index') }}"
                                 class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Pengajuan
                                 Penarikan</a>
                         </li>

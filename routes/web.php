@@ -6,6 +6,7 @@ use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Admin\NasabahController;
 use App\Http\Controllers\Admin\TabunganController;
 use App\Http\Controllers\User\PengajuanController;
+use App\Http\Controllers\Admin\PengajuanController as PengajuanAdmin;
 use App\Http\Controllers\User\TransaksiController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -50,12 +51,19 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/sampah/{id}', [SampahController::class, 'show'])->name('sampah.show');
     Route::put('/sampah/{id}', [SampahController::class, 'update'])->name('sampah.update');
     Route::delete('/sampah/{id}', [SampahController::class, 'destroy'])->name('sampah.destroy');
+    // Pengajuan
+    Route::get('/pengajuan-admin', [PengajuanAdmin::class, 'index'])->name('pengajuan.index');
+    Route::get('/pengajuan', [PengajuanAdmin::class, 'filter'])->name('pengajuan.filter');
+    Route::post('/pengajuan/{id}/approve', [PengajuanAdmin::class, 'approve'])->name('pengajuan.approve');
+    Route::post('/pengajuan/{id}/reject', [PengajuanAdmin::class, 'reject'])->name('pengajuan.reject');
 });
 
 // User routes
 Route::prefix('user')->middleware(['auth', 'role:member'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
-    Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('user.pengajuan');
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('user.transaksi');
     Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile');
+    Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('user.pengajuan');
+    Route::get('/pengajuan/create', [PengajuanController::class, 'create'])->name('user.pengajuan.create');
+    Route::post('/pengajuan', [PengajuanController::class, 'store'])->name('user.pengajuan.store');
 });
