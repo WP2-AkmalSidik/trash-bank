@@ -278,14 +278,6 @@
                 
                 Swal.close();
             })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Gagal memuat data',
-                    icon: 'error',
-                    confirmButtonColor: '#EF4444'
-                });
-            });
         });
     </script>
 @endsection

@@ -91,9 +91,9 @@ class PengajuanController extends Controller
         $memberAccount->updateBalance();
         
         // Cek ketersediaan saldo dengan minimum balance
-        $minimumBalance = 100000;
+        $minimumBalance = 10000;
         if (!$memberAccount->hasSufficientBalance($validated['amount'], $minimumBalance)) {
-            return redirect()->route('user.pengajuan.create')
+            return redirect()->route('user.pengajuan')
                 ->with('error', 'Saldo tidak mencukupi untuk melakukan penarikan sebesar ini.')
                 ->withInput();
         }
