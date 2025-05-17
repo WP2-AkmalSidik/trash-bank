@@ -69,5 +69,5 @@
     </div>
     
     <!-- Custom Pagination -->
-    @include('admin.transaksi.tabungan.components.pagination')
+    @include('admin.tabungan.components.pagination')
 </div>

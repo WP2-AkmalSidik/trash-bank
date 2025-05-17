@@ -3,7 +3,7 @@
     <nav class="flex" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li class="inline-flex items-center">
-                <a href="/" class="inline-flex items-center text-sm font-medium text-gray-500 dark:text-gray-400 -mr-4">
+                <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-500 dark:text-gray-400 -mr-4">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 text-primary dark:text-secondary dark:hover:text-yellow-300" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round"

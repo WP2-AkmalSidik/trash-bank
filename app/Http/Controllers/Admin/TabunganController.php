@@ -35,10 +35,10 @@ class TabunganController extends Controller
         $wasteTypes = WasteType::orderBy('name')->get();
 
         if ($request->ajax()) {
-            return view('admin.transaksi.tabungan.components.member-table', compact('members'));
+            return view('admin.tabungan.components.member-table', compact('members'));
         }
 
-        return view('admin.transaksi.tabungan.index', compact('members', 'wasteTypes'));
+        return view('admin.tabungan.index', compact('members', 'wasteTypes'));
     }
 
     /**
@@ -207,10 +207,10 @@ class TabunganController extends Controller
         $totalBalance = $totalDeposits - $totalWithdrawals;
 
         if ($request->ajax()) {
-            return view('admin.transaksi.tabungan.components.history-table', compact('transactions'));
+            return view('admin.tabungan.components.history-table', compact('transactions'));
         }
 
-        return view('admin.transaksi.tabungan.history', compact('member', 'transactions', 'totalBalance'));
+        return view('admin.tabungan.history', compact('member', 'transactions', 'totalBalance'));
     }
 
     /**
@@ -221,7 +221,7 @@ class TabunganController extends Controller
         $deposit = Deposit::with(['memberAccount.user', 'wasteType'])
             ->findOrFail($id);
 
-        return view('admin.transaksi.tabungan.components.receipt', compact('deposit'));
+        return view('admin.tabungan.components.receipt', compact('deposit'));
     }
 
     /**
@@ -279,7 +279,7 @@ class TabunganController extends Controller
         $totalWithdrawals = $member->memberAccount->withdrawals->sum('amount');
         $totalBalance = $totalDeposits - $totalWithdrawals;
 
-        $pdf = PDF::loadView('admin.transaksi.tabungan.components.history-pdf', [
+        $pdf = PDF::loadView('admin.tabungan.components.history-pdf', [
             'member' => $member,
             'transactions' => $transactions,
             'totalDeposits' => $totalDeposits,

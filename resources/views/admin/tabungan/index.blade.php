@@ -18,7 +18,7 @@
 
             <!-- Tabel Nasabah -->
             <div class="overflow-x-auto">
-                @include('admin.transaksi.tabungan.components.member-table')
+                @include('admin.tabungan.components.member-table')
             </div>
         </div>
     </section>
@@ -91,5 +91,5 @@
         @endif
     </script>
 
-    @include('admin.transaksi.tabungan.components.modal-tambah-transaksi')
+    @include('admin.tabungan.components.modal-tambah-transaksi')
 @endsection

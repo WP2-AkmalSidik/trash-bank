@@ -73,7 +73,7 @@
                 </li>
 
                 <!-- Riwayat Transaksi -->
-                <li>
+                {{-- <li>
                     <a href="/transaksi/history"
                         class="nav-link flex items-center p-2 text-base font-medium rounded-lg
                         {{ request()->is('transaksi/history*') ? 'bg-gray-100 dark:bg-gray-700 text-primary dark:text-secondary font-semibold' : 'text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
@@ -84,7 +84,7 @@
                         </svg>
                         <span class="ml-3">Riwayat Transaksi</span>
                     </a>
-                </li>
+                </li> --}}
 
                 <!-- Kelola Jenis Sampah -->
                 <li>

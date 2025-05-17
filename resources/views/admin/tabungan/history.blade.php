@@ -68,7 +68,7 @@
 
             <!-- Transaction History Table -->
             <div class="overflow-x-auto">
-                @include('admin.transaksi.tabungan.components.history-table')
+                @include('admin.tabungan.components.history-table')
             </div>
 
             <!-- Pagination -->
