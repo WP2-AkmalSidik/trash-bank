@@ -20,8 +20,7 @@
                         class="nav-link flex items-center p-2 text-base font-medium rounded-lg
                         {{ request()->routeIs('admin.dashboard') ? 'bg-gray-100 dark:bg-gray-700 text-primary dark:text-secondary font-semibold' : 'text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-6 h-6 text-primary dark:text-secondary">
+                            stroke="currentColor" class="w-6 h-6 text-primary dark:text-secondary">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125
                                   1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125
                                   1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
@@ -99,8 +98,20 @@
                     </a>
                 </li>
 
-                <!-- Laporan -->
+                <!-- Laporan Sampah -->
                 <li>
+                    <a href="{{ route('laporan.index') }}"
+                        class="nav-link flex items-center p-2 text-base font-medium rounded-lg {{ request()->routeIs('laporan.*') ? 'bg-gray-100 dark:bg-gray-700 text-primary dark:text-secondary font-semibold' : 'text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6 text-primary dark:text-secondary">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 12h10M7 8h10M7 16h6" />
+                        </svg>
+                        <span class="ml-3">Laporan</span>
+                    </a>
+                </li>
+
+                <!-- Laporan -->
+                {{-- <li>
                     <button type="button"
                         class="nav-link flex items-center p-2 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                         aria-controls="dropdown-laporan" data-collapse-toggle="dropdown-laporan">
@@ -119,25 +130,20 @@
                     </button>
                     <ul id="dropdown-laporan" class="dropdown-menu hidden space-y-2">
                         <li>
-                            <a href="#"
+                            <a href="{{ route('laporan.index') }}"
                                 class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Laporan
-                                Transaksi</a>
+                                Sampah</a>
                         </li>
                         <li>
                             <a href="#"
                                 class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Laporan
                                 Keuangan</a>
                         </li>
-                        <li>
-                            <a href="#"
-                                class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Laporan
-                                Sampah</a>
-                        </li>
                     </ul>
-                </li>
+                </li> --}}
 
                 <!-- Pengaturan -->
-                {{-- <li>
+                <li>
                     <button type="button"
                         class="nav-link flex items-center p-2 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                         aria-controls="dropdown-pengaturan" data-collapse-toggle="dropdown-pengaturan">
@@ -166,7 +172,7 @@
                                 Pengguna</a>
                         </li>
                     </ul>
-                </li> --}}
+                </li>
             </ul>
         </nav>
 

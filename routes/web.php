@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\LaporanSampahController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SampahController;
 use App\Http\Controllers\User\ProfileController;
@@ -57,6 +58,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/pengajuan', [PengajuanAdmin::class, 'filter'])->name('pengajuan.filter');
     Route::post('/pengajuan/{id}/approve', [PengajuanAdmin::class, 'approve'])->name('pengajuan.approve');
     Route::post('/pengajuan/{id}/reject', [PengajuanAdmin::class, 'reject'])->name('pengajuan.reject');
+    // Reports
+    Route::get('/laporan', [LaporanSampahController::class, 'index'])->name('laporan.index');
+    Route::get('/export-laporan', [LaporanSampahController::class, 'exportPdf'])->name('laporan.export');
 });
 
 // User routes
