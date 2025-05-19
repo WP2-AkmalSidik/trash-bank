@@ -1,6 +1,6 @@
-<!-- resources/views/admin/transaksi/receipt.blade.php -->
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,60 +8,60 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             font-size: 14px;
-            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
         }
         .receipt {
-            width: 80mm;
+            max-width: 300px;
             margin: 0 auto;
-            padding: 10px;
+            padding: 10px 0;
         }
         .receipt-header {
             text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 1px dashed #000;
-            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
         .receipt-header h1 {
-            font-size: 16px;
-            margin: 0 0 5px;
-        }
-        .receipt-header p {
-            margin: 0;
-            font-size: 12px;
-        }
-        .receipt-body {
-            margin-bottom: 20px;
-        }
-        .receipt-info {
-            margin-bottom: 20px;
-        }
-        .receipt-info p {
+            font-size: 18px;
             margin: 5px 0;
         }
-        .receipt-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
+        .receipt-header p {
+            font-size: 12px;
+            margin: 5px 0;
+        }
+        .receipt-content {
+            margin-bottom: 20px;
+        }
+        .receipt-content p {
+            margin: 3px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .receipt-content .label {
+            font-weight: bold;
         }
         .receipt-footer {
             text-align: center;
             font-size: 12px;
             margin-top: 20px;
-            border-top: 1px dashed #000;
             padding-top: 10px;
+            border-top: 1px dashed #ccc;
         }
-        .text-right {
+        .receipt-divider {
+            border-top: 1px dashed #ccc;
+            margin: 10px 0;
+        }
+        .right-align {
             text-align: right;
-        }
-        .font-bold {
-            font-weight: bold;
         }
         @media print {
             body {
-                width: 80mm;
+                margin: 0;
+                padding: 0;
+            }
+            .receipt {
+                width: 100%;
+                max-width: none;
             }
             .no-print {
                 display: none;
@@ -69,62 +69,72 @@
         }
     </style>
 </head>
+
 <body>
     <div class="receipt">
         <div class="receipt-header">
             <h1>BANK SAMPAH</h1>
-            <p>Jl. Contoh No. 123, Kota</p>
-            <p>Telp: 021-1234567</p>
+            <p>Jl. Lingkungan Hidup No. 123</p>
+            <p>Telp: 0812-3456-7890</p>
+            <div class="receipt-divider"></div>
+            <h2>BUKTI SETORAN SAMPAH</h2>
         </div>
-        
-        <div class="receipt-body">
-            <div class="receipt-info">
-                <p>No. Transaksi: #{{ $deposit->id }}</p>
-                <p>Tanggal: {{ $deposit->created_at->format('d/m/Y H:i') }}</p>
-                <p>Nasabah: {{ $deposit->memberAccount->user->name }}</p>
-                <p>No. Rekening: {{ $deposit->memberAccount->account_number }}</p>
-            </div>
+
+        <div class="receipt-content">
+            <p>
+                <span class="label">No. Bukti:</span>
+                <span>{{ sprintf('STR%06d', $deposit->id) }}</span>
+            </p>
+            <p>
+                <span class="label">Tanggal:</span>
+                <span>{{ $deposit->created_at->format('d/m/Y H:i') }}</span>
+            </p>
+            <p>
+                <span class="label">No. Rekening:</span>
+                <span>{{ $deposit->memberAccount->account_number }}</span>
+            </p>
+            <p>
+                <span class="label">Nasabah:</span>
+                <span>{{ $deposit->memberAccount->user->name }}</span>
+            </p>
             
-            <table class="receipt-table">
-                <tr>
-                    <td colspan="2">{{ $deposit->wasteType->name }}</td>
-                </tr>
-                <tr>
-                    <td>{{ number_format($deposit->weight_kg, 2, ',', '.') }} kg x Rp {{ number_format($deposit->wasteType->price_per_kg, 0, ',', '.') }}</td>
-                    <td class="text-right">Rp {{ number_format($deposit->total_price, 0, ',', '.') }}</td>
-                </tr>
-                <tr>
-                    <td colspan="2"><hr></td>
-                </tr>
-                <tr>
-                    <td class="font-bold">TOTAL</td>
-                    <td class="text-right font-bold">Rp {{ number_format($deposit->total_price, 0, ',', '.') }}</td>
-                </tr>
-            </table>
+            <div class="receipt-divider"></div>
+            
+            <p>
+                <span class="label">Jenis Sampah:</span>
+                <span>{{ $deposit->wasteType->name }}</span>
+            </p>
+            <p>
+                <span class="label">Berat:</span>
+                <span>{{ number_format($deposit->weight_kg, 2, ',', '.') }} kg</span>
+            </p>
+            <p>
+                <span class="label">Harga/kg:</span>
+                <span>Rp {{ number_format($deposit->price_per_kg, 0, ',', '.') }}</span>
+            </p>
+            <p>
+                <span class="label">Total:</span>
+                <span>Rp {{ number_format($deposit->total_price, 0, ',', '.') }}</span>
+            </p>
+            
+            <div class="receipt-divider"></div>
+            
+            <p>
+                <span class="label">Petugas:</span>
+                <span>{{ auth()->user()->name }}</span>
+            </p>
         </div>
-        
+
         <div class="receipt-footer">
-            <p>Terima kasih telah berkontribusi menjaga lingkungan</p>
-            <p>dengan menabung di Bank Sampah</p>
+            <p>Terima kasih atas partisipasi Anda!</p>
+            <p>Kontribusi Anda sangat berarti bagi lingkungan</p>
         </div>
     </div>
-    
+
     <div class="no-print" style="text-align: center; margin-top: 20px;">
-        <button onclick="window.print();" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
-            Cetak Bukti
-        </button>
-        <button onclick="window.close();" style="padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">
-            Tutup
-        </button>
+        <button onclick="window.print()">Cetak</button>
+        <button onclick="window.close()">Tutup</button>
     </div>
-    
-    <script>
-        window.onload = function() {
-            // Auto print when page loads
-            setTimeout(function() {
-                window.print();
-            }, 500);
-        };
-    </script>
 </body>
+
 </html>

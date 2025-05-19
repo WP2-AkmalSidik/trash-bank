@@ -90,12 +90,14 @@ class TabunganController extends Controller
         DB::beginTransaction();
         try {
             $wasteType = WasteType::findOrFail($request->waste_type_id);
-            $totalPrice = $wasteType->price_per_kg * $request->weight_kg;
+            $pricePerKg = $wasteType->price_per_kg;
+            $totalPrice = $pricePerKg * $request->weight_kg;
 
             $deposit = Deposit::create([
                 'member_account_id' => $request->member_account_id,
                 'waste_type_id' => $request->waste_type_id,
                 'weight_kg' => $request->weight_kg,
+                'price_per_kg' => $pricePerKg, // Store current price at time of deposit
                 'total_price' => $totalPrice,
             ]);
 
@@ -155,6 +157,7 @@ class TabunganController extends Controller
                 'member_account_id',
                 'waste_type_id',
                 'weight_kg',
+                'price_per_kg', // Add price_per_kg to select
                 'total_price',
                 'created_at',
                 'updated_at',
@@ -170,6 +173,7 @@ class TabunganController extends Controller
                 'member_account_id',
                 DB::raw('NULL as waste_type_id'),
                 DB::raw('NULL as weight_kg'),
+                DB::raw('NULL as price_per_kg'), // Add price_per_kg field for consistency
                 DB::raw('amount as total_price'),
                 'created_at',
                 'updated_at',
@@ -231,7 +235,7 @@ class TabunganController extends Controller
     {
         $member = User::where('role', 'member')
             ->with([
-                'memberAccount.deposits',
+                'memberAccount.deposits.wasteType',
                 'memberAccount.withdrawals' => function ($q) {
                     $q->where('status', 'approved');
                 }
@@ -251,6 +255,7 @@ class TabunganController extends Controller
                     'type' => 'deposit',
                     'waste_type' => $item->wasteType,
                     'weight_kg' => $item->weight_kg,
+                    'price_per_kg' => $item->price_per_kg, // Include price_per_kg
                     'total_price' => $item->total_price,
                     'created_at' => $item->created_at
                 ];
@@ -266,6 +271,7 @@ class TabunganController extends Controller
                     'type' => 'withdrawal',
                     'waste_type' => null,
                     'weight_kg' => null,
+                    'price_per_kg' => null, // Include price_per_kg field for consistency
                     'total_price' => $item->amount,
                     'created_at' => $item->created_at
                 ];

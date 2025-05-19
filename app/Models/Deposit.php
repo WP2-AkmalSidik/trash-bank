@@ -12,7 +12,14 @@ class Deposit extends Model
         'member_account_id',
         'waste_type_id',
         'weight_kg',
+        'price_per_kg',
         'total_price',
+    ];
+
+    protected $casts = [
+        'weight_kg' => 'decimal:2',
+        'price_per_kg' => 'decimal:2',
+        'total_price' => 'decimal:2',
     ];
 
     // Relasi: 1 Deposit milik 1 MemberAccount

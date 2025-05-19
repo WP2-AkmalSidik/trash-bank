@@ -1,203 +1,320 @@
-<!-- resources/views/admin/transaksi/components/modal-tambah-transaksi.blade.php -->
-<!-- Modal Backdrop -->
-<div id="modal-backdrop" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden"></div>
-
-<!-- Modal -->
-<div id="transaction-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-xl mx-4 overflow-hidden">
-        <!-- Modal Header -->
-        <div class="border-b dark:border-gray-700 px-6 py-4 flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Transaksi Setoran Sampah</h2>
-            <button onclick="closeTransactionModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                <i class="fa-solid fa-times text-xl"></i>
+<!-- Modal Tambah Transaksi -->
+<div id="modal-tambah-transaksi"
+    class="fixed inset-0 hidden z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="relative w-11/12 md:w-3/4 lg:w-1/2 mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                Tambah Transaksi Tabungan
+            </h3>
+            <button type="button" class="close-modal text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                <i class="fa-solid fa-times"></i>
             </button>
         </div>
 
-        <!-- Modal Body -->
-        <div class="px-6 py-4">
-            <form id="transaction-form" action="{{ route('transaksi.store') }}" method="POST">
-                @csrf
-                <input type="hidden" name="member_account_id" id="member_account_id">
-                
-                <div class="mb-4">
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Nasabah</p>
-                    <p id="member-name" class="text-lg font-semibold text-gray-800 dark:text-white"></p>
+        <div id="member-info" class="mb-4 hidden">
+            <div class="grid grid-cols-3 gap-2 text-sm">
+                <div class="space-y-0">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Saldo</p>
+                    <p class="font-bold text-green-600 truncate" id="member-balance">Rp. 0</p>
                 </div>
-                
-                <div class="mb-4">
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Saldo Saat Ini</p>
-                    <p id="current-balance" class="text-lg font-semibold text-green-600 dark:text-green-400"></p>
+                <div class="space-y-0">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Nama Nasabah</p>
+                    <p class="font-medium text-gray-900 dark:text-white truncate" id="member-name">-</p>
                 </div>
+                <div class="space-y-0">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">No. Rekening</p>
+                    <p class="font-medium text-gray-900 dark:text-white" id="member-account">-</p>
+                </div>
+            </div>
+        </div>
 
-                <div class="mb-4">
-                    <label for="waste_type_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <form id="form-transaksi" method="POST" action="{{ route('transaksi.store') }}">
+            @csrf
+            <input type="hidden" name="member_account_id" id="member_account_id">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Field Jenis Sampah -->
+                <div>
+                    <label for="waste_type_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                         Jenis Sampah
                     </label>
-                    <select name="waste_type_id" id="waste_type_id" required
-                        class="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:ring-primary focus:border-primary bg-white dark:bg-gray-700 text-gray-800 dark:text-white">
+                    <select name="waste_type_id" id="waste_type_id"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary">
                         <option value="">Pilih Jenis Sampah</option>
                         @foreach ($wasteTypes as $wasteType)
-                            <option value="{{ $wasteType->id }}" data-price="{{ $wasteType->price_per_kg }}">
-                                {{ $wasteType->name }} - Rp {{ number_format($wasteType->price_per_kg, 0, ',', '.') }}/kg
-                            </option>
+                            <option value="{{ $wasteType->id }}">{{ $wasteType->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                
-                <div class="mb-6">
-                    <label for="weight_kg" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Berat (kg)
+
+                <!-- Field Berat -->
+                <div>
+                    <label for="weight_kg" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Berat (Kg)
                     </label>
-                    <div class="flex rounded-md shadow-sm">
-                        <input type="number" name="weight_kg" id="weight_kg" required step="0.01" min="0.01"
-                            class="flex-grow border border-gray-300 dark:border-gray-600 rounded-l-lg p-2 focus:ring-primary focus:border-primary bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
-                            placeholder="0.00">
-                        <span class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-600 text-gray-500 dark:text-gray-400">
-                            kg
-                        </span>
-                    </div>
+                    <input type="number" step="0.01" min="0.01" name="weight_kg" id="weight_kg"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
+                        placeholder="Masukkan berat dalam kilogram">
                 </div>
-                
-                <div class="mb-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700 dark:text-gray-300">Harga per kg:</span>
-                        <span id="price-per-kg" class="font-medium">Rp 0</span>
-                    </div>
-                    <div class="flex justify-between items-center mt-2">
-                        <span class="text-gray-700 dark:text-gray-300">Total nilai:</span>
-                        <span id="total-amount" class="font-semibold text-lg text-green-600 dark:text-green-400">Rp 0</span>
-                    </div>
+            </div>
+
+            <div class="mt-4">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Harga per Kg
+                </label>
+                <div class="flex items-center p-2.5 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                    <span class="text-gray-900 dark:text-white">Rp</span>
+                    <span id="price-per-kg" class="ml-2 font-medium text-gray-900 dark:text-white">0</span>
                 </div>
-                
-                <div class="flex justify-end space-x-3">
-                    <button type="button" onclick="closeTransactionModal()"
-                        class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        Batal
-                    </button>
-                    <button type="button" onclick="submitTransaction()"
-                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-opacity-90 transition">
-                        Simpan Transaksi
-                    </button>
+            </div>
+
+            <div class="mt-4">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Total Harga
+                </label>
+                <div class="flex items-center p-2.5 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                    <span class="text-gray-900 dark:text-white">Rp</span>
+                    <span id="total-price" class="ml-2 font-medium text-gray-900 dark:text-white">0</span>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button type="button"
+                    class="close-modal mr-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800">
+                    Batal
+                </button>
+                <button type="submit" id="btn-submit-transaksi"
+                    class="px-4 py-2 bg-primary hover:bg-primary-dark rounded-lg text-white">
+                    Simpan Transaksi
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
 <script>
-    function openTransactionModal(memberId, memberName, memberAccountId) {
-        document.getElementById('modal-backdrop').classList.remove('hidden');
-        document.getElementById('transaction-modal').classList.remove('hidden');
-        document.getElementById('member-name').textContent = memberName;
-        document.getElementById('member_account_id').value = memberAccountId;
-        
-        // Fetch member balance
-        fetch(`{{ route('transaksi.get-member-data') }}?member_id=${memberId}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('current-balance').textContent = `Rp ${data.balance}`;
-            })
-            .catch(error => {
-                console.error('Error fetching member data:', error);
-                showErrorAlert('Gagal memuat data nasabah. Silakan coba lagi.');
-            });
-            
-        // Reset form fields
-        document.getElementById('waste_type_id').value = '';
-        document.getElementById('weight_kg').value = '';
-        document.getElementById('price-per-kg').textContent = 'Rp 0';
-        document.getElementById('total-amount').textContent = 'Rp 0';
-    }
-    
-    function closeTransactionModal() {
-        document.getElementById('modal-backdrop').classList.add('hidden');
-        document.getElementById('transaction-modal').classList.add('hidden');
-    }
-    
-    // Calculate total amount when waste type or weight changes
-    document.getElementById('waste_type_id').addEventListener('change', calculateTotal);
-    document.getElementById('weight_kg').addEventListener('input', calculateTotal);
-    
-    function calculateTotal() {
-        const wasteTypeSelect = document.getElementById('waste_type_id');
-        const weightInput = document.getElementById('weight_kg');
-        
-        if (wasteTypeSelect.value && weightInput.value) {
-            const selectedOption = wasteTypeSelect.options[wasteTypeSelect.selectedIndex];
-            const pricePerKg = parseFloat(selectedOption.dataset.price);
-            const weight = parseFloat(weightInput.value);
-            
-            const total = pricePerKg * weight;
-            
-            document.getElementById('price-per-kg').textContent = 'Rp ' + pricePerKg.toLocaleString('id-ID');
-            document.getElementById('total-amount').textContent = 'Rp ' + total.toLocaleString('id-ID', {maximumFractionDigits: 0});
-        } else {
-            document.getElementById('price-per-kg').textContent = 'Rp 0';
-            document.getElementById('total-amount').textContent = 'Rp 0';
-        }
-    }
-    
-    // Submit transaction form with AJAX and SweetAlert
-    function submitTransaction() {
-        // Form validation
-        const form = document.getElementById('transaction-form');
-        const wasteTypeSelect = document.getElementById('waste_type_id');
-        const weightInput = document.getElementById('weight_kg');
-        
-        // Basic validation
-        if (!wasteTypeSelect.value) {
-            showErrorAlert('Pilih jenis sampah terlebih dahulu!');
-            return;
-        }
-        
-        if (!weightInput.value || parseFloat(weightInput.value) <= 0) {
-            showErrorAlert('Masukkan berat sampah yang valid!');
-            return;
-        }
-        
-        // Show loading state
-        Swal.fire({
-            title: 'Memproses...',
-            text: 'Sedang menyimpan transaksi',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            allowEnterKey: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-        
-        // Prepare form data
-        const formData = new FormData(form);
-        
-        // Send AJAX request
-        fetch('{{ route('transaksi.store') }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
+    // Inisialisasi variabel untuk harga sampah
+    let wastePrice = 0;
+    let totalPrice = 0;
+
+    // Fungsi untuk membuka modal
+    function openTransactionModal(memberId) {
+        // Reset form
+        $('#form-transaksi')[0].reset();
+        $('#waste_type_id').val('');
+        $('#price-per-kg').text('0');
+        $('#total-price').text('0');
+
+        // Tampilkan loading
+        $('#member-info').addClass('hidden');
+        $('#member-name').text('-');
+        $('#member-account').text('-');
+        $('#member-balance').text('Rp 0');
+
+        // Ambil data member
+        $.ajax({
+            url: "{{ route('transaksi.get-member-data') }}",
+            type: "GET",
+            data: {
+                member_id: memberId
             },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Close modal
-                closeTransactionModal();
-                
-                // Show success message
-                showSuccessAlert(data.message, function() {
-                    // Refresh the page to show updated data
-                    window.location.reload();
-                });
-            } else {
-                showErrorAlert(data.message || 'Terjadi kesalahan. Silakan coba lagi.');
+            success: function(response) {
+                $('#member_account_id').val(response.member.member_account.id);
+                $('#member-name').text(response.member.name);
+                $('#member-account').text(response.member.member_account.account_number);
+                $('#member-balance').text('Rp ' + response.balance);
+                $('#member-info').removeClass('hidden');
+            },
+            error: function(xhr) {
+                console.error('Error:', xhr.responseText);
+                showErrorAlert('Gagal memuat data nasabah. Silakan coba lagi.');
             }
-        })
-        .catch(error => {
-            console.error('Error submitting transaction:', error);
-            showErrorAlert('Terjadi kesalahan. Silakan coba lagi.');
+        });
+
+        // Tampilkan modal
+        $('#modal-tambah-transaksi').removeClass('hidden');
+    }
+
+    // Event handler untuk menutup modal
+    $('.close-modal').on('click', function() {
+        $('#modal-tambah-transaksi').addClass('hidden');
+    });
+
+    // Event handler untuk membuka modal dari tombol di tabel
+    $(document).on('click', '.btn-tambah-transaksi', function() {
+        const memberId = $(this).data('id');
+        openTransactionModal(memberId);
+    });
+
+    // Event handler untuk perubahan jenis sampah
+    $('#waste_type_id').on('change', function() {
+        const wasteTypeId = $(this).val();
+        if (wasteTypeId) {
+            // Ambil harga sampah
+            $.ajax({
+                url: "{{ route('transaksi.get-waste-price') }}",
+                type: "GET",
+                data: {
+                    waste_type_id: wasteTypeId
+                },
+                success: function(response) {
+                    wastePrice = parseFloat(response.price);
+
+                    // Format dan tampilkan harga per kg
+                    $('#price-per-kg').text(wastePrice.toLocaleString('id-ID'));
+
+                    // Hitung total jika berat sudah diisi
+                    const weightKg = parseFloat($('#weight_kg').val()) || 0;
+                    calculateTotal(weightKg);
+                },
+                error: function(xhr) {
+                    console.error('Error:', xhr.responseText);
+                    showErrorAlert('Gagal memuat harga sampah. Silakan coba lagi.');
+                }
+            });
+        } else {
+            wastePrice = 0;
+            $('#price-per-kg').text('0');
+            calculateTotal(0);
+        }
+    });
+
+    // Event handler untuk perubahan berat
+    $('#weight_kg').on('input', function() {
+        const weightKg = parseFloat($(this).val()) || 0;
+        calculateTotal(weightKg);
+    });
+
+    // Fungsi untuk menghitung total harga
+    function calculateTotal(weightKg) {
+        totalPrice = weightKg * wastePrice;
+        $('#total-price').text(totalPrice.toLocaleString('id-ID'));
+    }
+
+    // Event handler untuk submit form
+    // Fungsi untuk menampilkan SweetAlert sukses
+    function showSuccessAlert(message) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: message,
+            timer: 2000,
+            showConfirmButton: false
         });
     }
+
+    // Fungsi untuk menampilkan SweetAlert error
+    function showErrorAlert(message) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal',
+            text: message,
+            confirmButtonColor: '#3085d6',
+        });
+    }
+
+    // Event handler untuk submit form
+    $('#form-transaksi').on('submit', function(e) {
+        e.preventDefault();
+
+        const submitBtn = $('#btn-submit-transaksi');
+        const originalBtnText = submitBtn.html();
+
+        // Tampilkan loading indicator
+        submitBtn.prop('disabled', true);
+        submitBtn.html(`
+            <span class="flex items-center justify-center">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Memproses...
+            </span>
+        `);
+
+        // Validasi
+        const weightKg = parseFloat($('#weight_kg').val());
+        const wasteTypeId = $('#waste_type_id').val();
+        const memberAccountId = $('#member_account_id').val();
+
+        if (!memberAccountId) {
+            submitBtn.prop('disabled', false);
+            submitBtn.html(originalBtnText);
+            showErrorAlert('Data nasabah tidak valid');
+            return;
+        }
+
+        if (!wasteTypeId) {
+            submitBtn.prop('disabled', false);
+            submitBtn.html(originalBtnText);
+            showErrorAlert('Silakan pilih jenis sampah');
+            return;
+        }
+
+        if (!weightKg || weightKg <= 0) {
+            submitBtn.prop('disabled', false);
+            submitBtn.html(originalBtnText);
+            showErrorAlert('Silakan masukkan berat sampah yang valid');
+            return;
+        }
+
+        // Submit form melalui AJAX
+        $.ajax({
+            url: $(this).attr('action'),
+            type: "POST",
+            data: $(this).serialize(),
+            success: function(response) {
+                submitBtn.prop('disabled', false);
+                submitBtn.html(originalBtnText);
+
+                if (response.success) {
+                    // Tutup modal
+                    $('#modal-tambah-transaksi').addClass('hidden');
+
+                    // Tampilkan pesan sukses
+                    showSuccessAlert(response.message);
+
+                    // Buka cetak bon di tab baru
+                    const receiptUrl = "{{ route('transaksi.print-receipt', ':id') }}".replace(
+                        ':id', response.deposit_id);
+                    window.open(receiptUrl, '_blank');
+
+                    // Reload halaman setelah delay
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    showErrorAlert(response.message);
+                }
+            },
+            error: function(xhr) {
+                submitBtn.prop('disabled', false);
+                submitBtn.html(originalBtnText);
+
+                let errorMessage = 'Gagal menyimpan transaksi. Silakan coba lagi.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                showErrorAlert(errorMessage);
+            }
+        });
+    });
+
+    // Perbaikan untuk AJAX error handling lainnya
+    $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+        $('#btn-submit-transaksi').prop('disabled', false);
+        $('#btn-submit-transaksi').html('Simpan Transaksi');
+
+        if (jqxhr.status === 422) {
+            // Handle validation errors
+            const errors = jqxhr.responseJSON.errors;
+            let errorMessage = '';
+            for (const key in errors) {
+                errorMessage += errors[key][0] + '\n';
+            }
+            showErrorAlert(errorMessage);
+        } else if (jqxhr.status === 500) {
+            showErrorAlert('Terjadi kesalahan server. Silakan coba lagi nanti.');
+        }
+    });
 </script>

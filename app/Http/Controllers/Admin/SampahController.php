@@ -17,7 +17,7 @@ class SampahController extends Controller
                 $query->where('name', 'like', "%{$search}%");
             })
             ->orderBy('name')
-            ->paginate(5);
+            ->paginate(10);
         
         if ($request->ajax()) {
             return view('admin.sampah.components.waste-table', compact('wasteTypes'))->render();

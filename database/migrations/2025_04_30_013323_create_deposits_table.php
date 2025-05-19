@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('member_account_id')->constrained('member_accounts')->onDelete('cascade');
             $table->foreignId('waste_type_id')->constrained('waste_types')->onDelete('cascade');
             $table->decimal('weight_kg', 10, 2);
+            $table->decimal('price_per_kg', 10, 2);
             $table->decimal('total_price', 10, 2);
             $table->timestamps();
         });
