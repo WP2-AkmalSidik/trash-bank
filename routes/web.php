@@ -67,6 +67,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 Route::prefix('user')->middleware(['auth', 'role:member'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('user.transaksi');
+    Route::get('/transaksi/filter', [TransaksiController::class, 'filter'])->name('user.transaksi.filter');
     Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile');
     Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('user.pengajuan');
     Route::get('/pengajuan/create', [PengajuanController::class, 'create'])->name('user.pengajuan.create');
