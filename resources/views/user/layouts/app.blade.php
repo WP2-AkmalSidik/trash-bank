@@ -15,6 +15,7 @@
 
     <!-- Bottom Navigation -->
     @include('user.components.navigation')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @stack('scripts')
     <script>

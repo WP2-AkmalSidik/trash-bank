@@ -10,27 +10,19 @@
         <div class="p-5">
             <!-- Profil Info -->
             <div class="flex flex-col items-center mb-8">
-                <div class="w-24 h-24 bg-gray-200 rounded-full mb-3 relative">
-                    <div class="absolute inset-0 rounded-full overflow-hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div
-                        class="absolute bottom-0 right-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center border-2 border-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                    </div>
+                <div
+                    class="w-24 h-24 bg-primary rounded-full mb-3 flex items-center justify-center text-white text-4xl font-bold">
+                    @php
+                        $nameParts = explode(' ', trim($user->name));
+                        $initials = strtoupper(substr($nameParts[0], 0, 1));
+                        if (count($nameParts) > 1) {
+                            $initials .= strtoupper(substr($nameParts[1], 0, 1));
+                        }
+                    @endphp
+                    {{ $initials }}
                 </div>
-                <h2 class="text-xl font-bold text-dark">Budi Santoso</h2>
-                <p class="text-gray-500">NS-20211015</p>
+                <h2 class="text-xl font-bold text-dark">{{ $user->name }}</h2>
+                <p class="text-gray-500">{{ $user->memberAccount->account_number }}</p>
             </div>
 
             <!-- Informasi Pribadi -->
@@ -39,17 +31,17 @@
 
                 <div class="mb-4">
                     <p class="text-sm text-gray-500 mb-1">Nama Lengkap</p>
-                    <p class="font-medium">Budi Santoso</p>
+                    <p class="font-medium">{{ $user->name }}</p>
                 </div>
 
                 <div class="mb-4">
                     <p class="text-sm text-gray-500 mb-1">Nomor Telepon</p>
-                    <p class="font-medium">081234567890</p>
+                    <p class="font-medium">{{ $user->phone_number ?? '-' }}</p>
                 </div>
 
                 <div class="mb-4">
                     <p class="text-sm text-gray-500 mb-1">Email</p>
-                    <p class="font-medium">budi.santoso@email.com</p>
+                    <p class="font-medium">{{ $user->email }}</p>
                 </div>
             </div>
 
@@ -59,29 +51,51 @@
 
                 <div class="mb-4">
                     <p class="text-sm text-gray-500 mb-1">Nomor Rekening</p>
-                    <p class="font-medium">NS-20211015</p>
+                    <p class="font-medium">{{ $user->memberAccount->account_number }}</p>
                 </div>
 
                 <div class="mb-4">
                     <p class="text-sm text-gray-500 mb-1">Tanggal Pembukaan</p>
-                    <p class="font-medium">15 Oktober 2021</p>
+                    <p class="font-medium">{{ $user->memberAccount->created_at->format('d F Y') }}</p>
                 </div>
 
                 <div>
                     <p class="text-sm text-gray-500 mb-1">Status</p>
                     <div class="inline-flex items-center">
+                        @php
+                            $accountAge = $user->memberAccount->created_at->diffInMonths(now());
+                            $isActive = $accountAge >= 6;
+                        @endphp
                         <span
-                            class="bg-green-100 text-green-600 text-xs font-medium px-2 py-1 rounded-full mr-2">Aktif</span>
-                        <span class="text-sm">Sudah bisa melakukan penarikan</span>
+                            class="bg-{{ $isActive ? 'green' : 'yellow' }}-100 text-{{ $isActive ? 'green' : 'yellow' }}-600 text-xs font-medium px-2 py-1 rounded-full mr-2">
+                            {{ $isActive ? 'Aktif' : 'Belum Aktif' }}
+                        </span>
+                        <span class="text-sm">
+                            @if ($isActive)
+                                Sudah bisa melakukan penarikan
+                            @else
+                                Belum bisa melakukan penarikan (minimal 6 bulan)
+                            @endif
+                        </span>
                     </div>
+                </div>
+            </div>
+
+            <!-- Saldo Rekening -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <h3 class="font-bold text-dark mb-4">Saldo Rekening</h3>
+                <div class="flex justify-between items-center">
+                    <p class="text-sm text-gray-500">Total Saldo</p>
+                    <p class="font-bold text-primary text-lg">Rp
+                        {{ number_format($user->memberAccount->balance, 0, ',', '.') }}</p>
                 </div>
             </div>
 
             <!-- Pengaturan dan Logout -->
             <div class="mb-20">
-                <form method="POST" action="{{ route('logout') }}">
+                <form id="logout-form" method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit"
+                    <button type="button" id="logout-button"
                         class="w-full flex items-center justify-center gap-2 bg-red-50 text-red-600 font-medium py-3 rounded-xl hover:bg-red-100 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-6 h-6">
@@ -91,9 +105,25 @@
                         <span>Logout</span>
                     </button>
                 </form>
-
             </div>
-
         </div>
     </div>
+    <script>
+        document.getElementById('logout-button').addEventListener('click', function() {
+            Swal.fire({
+                title: 'Yakin ingin logout?',
+                text: "Kamu akan keluar dari akun ini.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logout-form').submit();
+                }
+            });
+        });
+    </script>
 @endsection
