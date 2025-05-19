@@ -66,10 +66,6 @@
             });
         }
 
-        /**
-         * Display an error message
-         * @param {string} message - The error message to display
-         */
         function showErrorAlert(message) {
             Swal.fire({
                 icon: 'error',
@@ -80,13 +76,6 @@
             });
         }
 
-        /**
-         * Display a confirmation dialog
-         * @param {string} title - The title of the confirmation dialog
-         * @param {string} text - The text of the confirmation dialog
-         * @param {string} confirmButtonText - The text for the confirm button
-         * @param {function} callback - The function to execute if confirmed
-         */
         function showConfirmationAlert(title, text, confirmButtonText, callback) {
             Swal.fire({
                 title: title,
@@ -103,12 +92,6 @@
                 }
             });
         }
-
-        /**
-         * Display a toast notification
-         * @param {string} message - The message to display
-         * @param {string} icon - The icon to display (success, error, warning, info)
-         */
         function showToast(message, icon = 'success') {
             const Toast = Swal.mixin({
                 toast: true,
