@@ -13,14 +13,11 @@ use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Authentication\AuthController as AuthenticationController;
 
-Route::get('/', function () {
-    return view('auth.login');
-});
 
 Route::controller(AuthenticationController::class)->group(function () {
-    Route::get('/login', 'showLoginForm')->name('login');
+    Route::get('/', 'showLoginForm')->name('login');
     Route::post('/login', 'login')
-        ->middleware(['throttle:5,1']) // Maksimal 5 percobaan login dalam 1 menit
+        ->middleware(['throttle:5,1'])
         ->name('login.post');
     Route::post('/logout', 'logout')->name('logout');
 });
