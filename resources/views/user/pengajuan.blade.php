@@ -8,22 +8,12 @@
     @include('user.components.header')
 
     <div class="p-5">
-        @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                {{ session('error') }}
-            </div>
-        @endif
-
         <div class="card-balance p-4 mb-6">
             <div class="flex justify-between items-center mb-2">
                 <h2 class="text-white text-lg font-bold">Status Pengajuan</h2>
-                <div class="bg-secondary/80 text-xs text-white font-medium px-2 py-1 rounded-full">Aktif</div>
+                <div class="bg-{{ $isAccountEligible ? 'secondary/80' : 'red-600/80' }} text-xs text-white font-medium px-2 py-1 rounded-full">
+                    {{ $isAccountEligible ? 'Aktif' : 'Tidak Aktif' }}
+                </div>
             </div>
             <p class="text-white/80 text-sm mb-3">Saldo yang dapat ditarik</p>
             <h3 class="text-white text-2xl font-bold mb-4">Rp {{ number_format($withdrawableAmount, 0, ',', '.') }}</h3>
@@ -37,13 +27,19 @@
                     <span>Minimal saldo tersisa</span>
                     <span>Rp {{ number_format($minimumBalance, 0, ',', '.') }}</span>
                 </div>
+                @if(!$isAccountEligible)
+                <div class="flex justify-between text-white/90 text-sm mt-1 bg-red-500/20 p-2 rounded">
+                    <span>Akun aktif untuk penarikan pada</span>
+                    <span>{{ $eligibleDate }}</span>
+                </div>
+                @endif
             </div>
         </div>
 
         <!-- Button trigger modal -->
         <button 
-            onclick="document.getElementById('modal-pengajuan').classList.remove('hidden')" 
-            class="block w-full bg-primary text-white font-medium py-3 rounded-xl mb-6 shadow-md text-center">
+            onclick="showPengajuanModal()"
+            class="block w-full bg-primary text-white font-medium py-3 rounded-xl mb-6 shadow-md text-center {{ !$isAccountEligible ? 'opacity-50 cursor-not-allowed' : '' }}">
             Ajukan Penarikan Dana
         </button>
 
@@ -56,7 +52,7 @@
                 </button>
 
                 <h2 class="text-lg font-bold mb-4 text-gray-800">Form Pengajuan Penarikan Dana</h2>
-                <form action="{{ route('user.pengajuan.store') }}" method="POST">
+                <form action="{{ route('user.pengajuan.store') }}" method="POST" id="pengajuanForm">
                     @csrf
 
                     <div class="mb-4">
@@ -148,7 +144,7 @@
                 @foreach($withdrawals as $withdrawal)
                     <div class="bg-white rounded-lg shadow-sm p-4 mb-3">
                         <div class="flex justify-between items-center mb-2">
-                            <h4 class="font-semibold text-dark">Pengajuan #{{ $withdrawal->id }}</h4>
+                            <h4 class="font-semibold text-dark">Pengajuan ke-{{ $withdrawal->submission_number }}</h4>
                             <div class="
                                 @if($withdrawal->status == 'approved') bg-green-100 text-green-600 
                                 @elseif($withdrawal->status == 'rejected') bg-red-100 text-red-600 
@@ -190,6 +186,9 @@
     </div>
 </div>
 
+<!-- SweetAlert2 Library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     // Script untuk toggle form e-wallet
     const methodCash = document.getElementById('method_cash');
@@ -211,5 +210,68 @@
     methodCash.addEventListener('change', toggleEwalletFields);
     methodEwallet.addEventListener('change', toggleEwalletFields);
     toggleEwalletFields(); // initial
+
+    // Fungsi untuk menampilkan modal pengajuan
+    function showPengajuanModal() {
+        const isEligible = {{ $isAccountEligible ? 'true' : 'false' }};
+        
+        if (!isEligible) {
+            Swal.fire({
+                title: 'Akun Belum Memenuhi Syarat',
+                text: 'Akun Anda belum mencapai usia minimal 6 bulan untuk melakukan penarikan dana. Akun Anda akan aktif untuk penarikan pada tanggal {{ $eligibleDate }}.',
+                icon: 'warning',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+        
+        document.getElementById('modal-pengajuan').classList.remove('hidden');
+    }
+
+    // SweetAlert untuk notifikasi
+    document.addEventListener('DOMContentLoaded', function() {
+        // Form submit dengan SweetAlert
+        const pengajuanForm = document.getElementById('pengajuanForm');
+        if (pengajuanForm) {
+            pengajuanForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                Swal.fire({
+                    title: 'Konfirmasi Pengajuan',
+                    text: 'Apakah Anda yakin ingin mengajukan penarikan dana?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Ajukan!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        pengajuanForm.submit();
+                    }
+                });
+            });
+        }
+
+        // SweetAlert untuk flash messages
+        @if(session('success'))
+            Swal.fire({
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                icon: 'success',
+                confirmButtonColor: '#3085d6'
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                title: 'Gagal!',
+                text: '{{ session('error') }}',
+                icon: 'error',
+                confirmButtonColor: '#3085d6'
+            });
+        @endif
+    });
 </script>
 @endsection

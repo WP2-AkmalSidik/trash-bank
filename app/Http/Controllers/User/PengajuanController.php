@@ -7,6 +7,7 @@ use App\Models\MemberAccount;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class PengajuanController extends Controller
 {
@@ -15,60 +16,85 @@ class PengajuanController extends Controller
     {
         $user = Auth::user();
         $memberAccount = MemberAccount::where('user_id', $user->id)->first();
-        
+
         if (!$memberAccount) {
             return redirect()->route('user.dashboard')
                 ->with('error', 'Anda belum memiliki rekening. Hubungi admin untuk membuat rekening.');
         }
-        
+
         // Update saldo terlebih dahulu
         $memberAccount->updateBalance();
-        
-        // Mengambil data withdrawal/penarikan
+
+        // Mengambil data withdrawal/penarikan (dengan pagination)
         $withdrawals = Withdrawal::where('member_account_id', $memberAccount->id)
-                                  ->orderBy('created_at', 'desc')
-                                  ->paginate(10); // Changed to paginate for better performance
-        
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        // Tambahkan nomor urut pengajuan per pengguna
+        $withdrawals->getCollection()->transform(function ($withdrawal) use ($memberAccount) {
+            $withdrawal->submission_number = Withdrawal::where('member_account_id', $memberAccount->id)
+                ->where('created_at', '<=', $withdrawal->created_at)
+                ->count();
+            return $withdrawal;
+        });
+
         // Minimal saldo yang harus tersisa setelah penarikan
-        $minimumBalance = 10000; // Changed to 100,000 to match your create view
-        
+        $minimumBalance = 10000;
+
+        // Cek apakah account berusia minimal 6 bulan
+        $accountAge = Carbon::parse($memberAccount->created_at);
+        $sixMonthsAfter = $accountAge->copy()->addMonths(6);
+        $isAccountEligible = Carbon::now()->gte($sixMonthsAfter);
+
         return view('user.pengajuan', [
             'memberAccount' => $memberAccount,
             'withdrawals' => $withdrawals,
             'minimumBalance' => $minimumBalance,
-            'withdrawableAmount' => max(0, $memberAccount->balance - $minimumBalance)
+            'withdrawableAmount' => max(0, $memberAccount->balance - $minimumBalance),
+            'isAccountEligible' => $isAccountEligible,
+            'eligibleDate' => $sixMonthsAfter->format('d M Y')
         ]);
     }
-    
+
     // Menampilkan form pengajuan penarikan dana
     public function create()
     {
         $user = Auth::user();
         $memberAccount = MemberAccount::where('user_id', $user->id)->first();
-        
+
         if (!$memberAccount) {
             return redirect()->route('user.dashboard')
                 ->with('error', 'Anda belum memiliki rekening. Hubungi admin untuk membuat rekening.');
         }
-        
+
+        // Cek apakah account berusia minimal 6 bulan
+        $accountAge = Carbon::parse($memberAccount->created_at);
+        $sixMonthsAfter = $accountAge->copy()->addMonths(6);
+        $isAccountEligible = Carbon::now()->gte($sixMonthsAfter);
+
+        if (!$isAccountEligible) {
+            return redirect()->route('user.pengajuan')
+                ->with('error', 'Akun Anda belum memenuhi persyaratan usia minimal (6 bulan) untuk melakukan penarikan dana. Akun Anda akan aktif untuk penarikan pada tanggal ' . $sixMonthsAfter->format('d M Y') . '.');
+        }
+
         // Update saldo terlebih dahulu
         $memberAccount->updateBalance();
-        
+
         // Minimal saldo yang harus tersisa setelah penarikan
         $minimumBalance = 10000;
         $withdrawableAmount = max(0, $memberAccount->balance - $minimumBalance);
-        
+
         if ($withdrawableAmount <= 0) {
             return redirect()->route('user.pengajuan')
                 ->with('error', 'Saldo Anda tidak mencukupi untuk melakukan penarikan.');
         }
-        
+
         return view('user.pengajuan.create', [
             'memberAccount' => $memberAccount,
             'withdrawableAmount' => $withdrawableAmount
         ]);
     }
-    
+
     // Menyimpan data pengajuan penarikan
     public function store(Request $request)
     {
@@ -78,18 +104,28 @@ class PengajuanController extends Controller
             'ewallet_type' => 'required_if:method,ewallet',
             'ewallet_number' => 'required_if:method,ewallet'
         ]);
-        
+
         $user = Auth::user();
         $memberAccount = MemberAccount::where('user_id', $user->id)->first();
-        
+
         if (!$memberAccount) {
             return redirect()->route('user.dashboard')
                 ->with('error', 'Anda belum memiliki rekening. Hubungi admin untuk membuat rekening.');
         }
-        
+
+        // Cek apakah account berusia minimal 6 bulan
+        $accountAge = Carbon::parse($memberAccount->created_at);
+        $sixMonthsAfter = $accountAge->copy()->addMonths(6);
+        $isAccountEligible = Carbon::now()->gte($sixMonthsAfter);
+
+        if (!$isAccountEligible) {
+            return redirect()->route('user.pengajuan')
+                ->with('error', 'Akun Anda belum memenuhi persyaratan usia minimal (6 bulan) untuk melakukan penarikan dana. Akun Anda akan aktif untuk penarikan pada tanggal ' . $sixMonthsAfter->format('d M Y') . '.');
+        }
+
         // Update saldo terlebih dahulu
         $memberAccount->updateBalance();
-        
+
         // Cek ketersediaan saldo dengan minimum balance
         $minimumBalance = 10000;
         if (!$memberAccount->hasSufficientBalance($validated['amount'], $minimumBalance)) {
@@ -97,40 +133,40 @@ class PengajuanController extends Controller
                 ->with('error', 'Saldo tidak mencukupi untuk melakukan penarikan sebesar ini.')
                 ->withInput();
         }
-        
+
         // Simpan data withdrawal
         $withdrawal = new Withdrawal();
         $withdrawal->member_account_id = $memberAccount->id;
         $withdrawal->amount = $validated['amount'];
         $withdrawal->method = $validated['method'];
-        
+
         if ($validated['method'] === 'ewallet') {
             $withdrawal->ewallet_type = $validated['ewallet_type'];
             $withdrawal->ewallet_number = $validated['ewallet_number'];
         }
-        
+
         $withdrawal->status = 'pending';
         $withdrawal->save();
-        
+
         return redirect()->route('user.pengajuan')
             ->with('success', 'Pengajuan penarikan berhasil dibuat. Silakan tunggu persetujuan dari admin.');
     }
-    
+
     // Menampilkan detail pengajuan penarikan
     public function show($id)
     {
         $user = Auth::user();
         $memberAccount = MemberAccount::where('user_id', $user->id)->first();
-        
+
         if (!$memberAccount) {
             return redirect()->route('user.dashboard')
                 ->with('error', 'Anda belum memiliki rekening. Hubungi admin untuk membuat rekening.');
         }
-        
+
         $withdrawal = Withdrawal::where('id', $id)
-                                ->where('member_account_id', $memberAccount->id)
-                                ->firstOrFail();
-        
+            ->where('member_account_id', $memberAccount->id)
+            ->firstOrFail();
+
         return view('user.pengajuan.show', [
             'withdrawal' => $withdrawal,
             'memberAccount' => $memberAccount
