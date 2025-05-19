@@ -70,7 +70,7 @@ class LaporanSampahController extends Controller
             ]);
         }
 
-        return view('admin.sampah.index', [
+        return view('admin.laporan-sampah.index', [
             'wasteData' => $wasteData,
             'wasteTypes' => $wasteTypes,
             'years' => $years,
@@ -117,7 +117,7 @@ class LaporanSampahController extends Controller
         $reportTitle = $this->getReportTitle($month, $year, $wasteTypeId, $wasteData);
 
         try {
-            $pdf = PDF::loadView('admin.sampah.pdf', [
+            $pdf = PDF::loadView('admin.laporan-sampah.pdf', [
                 'wasteData' => $wasteData,
                 'summary' => $summary,
                 'reportTitle' => $reportTitle,

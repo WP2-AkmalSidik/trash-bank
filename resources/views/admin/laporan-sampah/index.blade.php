@@ -72,10 +72,10 @@
             </div>
 
             <!-- Summary Cards -->
-            @include('admin.sampah.partials.summary-cards')
+            @include('admin.laporan-sampah.partials.summary-cards')
 
             <!-- Waste Types Table -->
-            @include('admin.sampah.partials.waste-table')
+            @include('admin.laporan-sampah.partials.waste-table')
         </div>
     </div>
 
