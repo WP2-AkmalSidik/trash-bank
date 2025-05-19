@@ -13,18 +13,14 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display user dashboard.
-     */
+
     public function index()
     {
         $user = Auth::user();
         
-        // Get user account details
         $memberAccount = $user->memberAccount;
         
         if (!$memberAccount) {
-            // If user doesn't have an account yet
             return view('user.beranda', [
                 'user' => $user,
                 'balance' => 0,
@@ -36,10 +32,8 @@ class DashboardController extends Controller
             ]);
         }
         
-        // Get member balance
         $balance = $memberAccount->balance;
         
-        // Calculate monthly growth percentage
         $currentMonth = now()->month;
         $lastMonth = now()->subMonth()->month;
         
@@ -55,23 +49,11 @@ class DashboardController extends Controller
         if ($lastMonthDeposits > 0) {
             $monthlyGrowth = (($currentMonthDeposits - $lastMonthDeposits) / $lastMonthDeposits) * 100;
         } elseif ($currentMonthDeposits > 0) {
-            $monthlyGrowth = 100; // If there were no deposits last month but there are this month
+            $monthlyGrowth = 100;
         }
         
-        // Get waste types with price changes
         $wasteTypes = WasteType::all();
         
-        // Calculate price changes for each waste type (simulate previous prices for demo)
-        foreach ($wasteTypes as $wasteType) {
-            // In a real application, you'd get the previous price from a price history table
-            // For demo purposes, we'll generate a random previous price to show the percentage change
-            $previousPrice = $wasteType->price_per_kg * (1 - (rand(-10, 10) / 100));
-            $priceChange = (($wasteType->price_per_kg - $previousPrice) / $previousPrice) * 100;
-            $wasteType->price_change = round($priceChange, 1);
-            $wasteType->is_increase = $priceChange > 0;
-        }
-        
-        // Get the last 5 transactions (deposits and withdrawals)
         $depositTransactions = Deposit::where('member_account_id', $memberAccount->id)
             ->orderBy('created_at', 'desc')
             ->take(5)
@@ -101,20 +83,16 @@ class DashboardController extends Controller
                 ];
             });
             
-        // Combine and sort transactions
         $allTransactions = $depositTransactions->concat($withdrawalTransactions)
             ->sortByDesc('created_at')
             ->take(5);
         
-        // Get the latest 3 news/announcements
         $news = News::orderBy('created_at', 'desc')
             ->take(3)
             ->get();
         
-        // Get list of waste bank locations
         $locations = Location::all();
         
-        // Minimum balance required for withdrawals
         $minimumBalance = 10000;
         $withdrawableAmount = max(0, $balance - $minimumBalance);
         

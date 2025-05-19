@@ -112,7 +112,6 @@
     </div>
 
     <script>
-        // Script untuk toggle form e-wallet
         const methodCash = document.getElementById('method_cash');
         const methodEwallet = document.getElementById('method_ewallet');
         const ewalletDetails = document.getElementById('ewallet_details');
@@ -132,7 +131,6 @@
         methodCash.addEventListener('change', toggleEwalletFields);
         methodEwallet.addEventListener('change', toggleEwalletFields);
         
-        // Run on page load
         document.addEventListener('DOMContentLoaded', function() {
             toggleEwalletFields();
         });
