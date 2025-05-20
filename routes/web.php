@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\LaporanSampahController;
+use App\Http\Controllers\Admin\LokasiBankSampahController;
+use App\Http\Controllers\Admin\PengumumanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SampahController;
 use App\Http\Controllers\User\ProfileController;
@@ -25,6 +27,19 @@ Route::controller(AuthenticationController::class)->group(function () {
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    // Pengumuman Routes
+    Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
+    Route::get('/pengumuman/{id}', [PengumumanController::class, 'show'])->name('pengumuman.show');
+    Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
+    Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('pengumuman.update');
+    Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
+    
+    // Lokasi Bank Sampah Routes
+    Route::get('/lokasi', [LokasiBankSampahController::class, 'index'])->name('lokasi.index');
+    Route::get('/lokasi/{id}', [LokasiBankSampahController::class, 'show'])->name('lokasi.show');
+    Route::post('/lokasi', [LokasiBankSampahController::class, 'store'])->name('lokasi.store');
+    Route::put('/lokasi/{id}', [LokasiBankSampahController::class, 'update'])->name('lokasi.update');
+    Route::delete('/lokasi/{id}', [LokasiBankSampahController::class, 'destroy'])->name('lokasi.destroy');
     // Waste Deposit Transaction Routes
     Route::prefix('transaksi')->group(function () {
         Route::get('/', [TabunganController::class, 'index'])->name('transaksi.index');

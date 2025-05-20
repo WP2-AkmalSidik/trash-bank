@@ -9,5 +9,6 @@ class Location extends Model
     protected $fillable = [
         'name',
         'address',
+        'url_maps'
     ];
 }
