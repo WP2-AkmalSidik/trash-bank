@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('method', ['cash', 'ewallet']);
             $table->string('ewallet_type')->nullable();
             $table->string('ewallet_number')->nullable();
+            $table->string('proof_of_transfer')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('rejection_reason')->nullable();
             $table->timestamps();

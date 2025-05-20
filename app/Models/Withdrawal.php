@@ -13,30 +13,31 @@ class Withdrawal extends Model
         'method',
         'ewallet_type',
         'ewallet_number',
+        'proof_of_transfer',
         'rejection_reason',
         'status',
     ];
 
-    // Relasi: 1 Withdrawal milik 1 MemberAccount
+    // Aturan validasi
+    public static $rules = [
+        'amount' => 'required|numeric|min:10000',
+        'method' => 'required|in:cash,ewallet',
+        'ewallet_type' => 'required_if:method,ewallet',
+        'ewallet_number' => 'required_if:method,ewallet',
+        'proof_of_transfer' => 'required_if:method,ewallet|image|mimes:jpeg,png,jpg|max:2048',
+    ];
+
     public function memberAccount()
     {
         return $this->belongsTo(MemberAccount::class);
     }
 
-    /**
-     * Method untuk mengurangi saldo jika penarikan disetujui
-     *
-     * @return bool
-     */
     public function approveWithdrawal()
     {
-        // Pastikan status adalah approved
         if ($this->status === 'approved') {
             $memberAccount = $this->memberAccount;
             
-            // Periksa apakah saldo mencukupi
             if ($memberAccount->hasSufficientBalance($this->amount, 0)) {
-                // Update saldo
                 $memberAccount->updateBalance();
                 return true;
             }
@@ -45,17 +46,16 @@ class Withdrawal extends Model
         return false;
     }
     
-    /**
-     * Method untuk menolak penarikan
-     *
-     * @param string|null $reason Alasan penolakan
-     * @return bool
-     */
     public function rejectWithdrawal($reason = null)
     {
         // Update status menjadi rejected
         $this->status = 'rejected';
         $this->rejection_reason = $reason;
         return $this->save();
+    }
+
+    public function requiresProofOfTransfer()
+    {
+        return $this->method === 'ewallet';
     }
 }

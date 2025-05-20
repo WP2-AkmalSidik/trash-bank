@@ -66,10 +66,12 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/sampah/{id}', [SampahController::class, 'update'])->name('sampah.update');
     Route::delete('/sampah/{id}', [SampahController::class, 'destroy'])->name('sampah.destroy');
     // Pengajuan
-    Route::get('/pengajuan-admin', [PengajuanAdmin::class, 'index'])->name('pengajuan.index');
-    Route::get('/pengajuan', [PengajuanAdmin::class, 'filter'])->name('pengajuan.filter');
+    Route::get('/pengajuan', [PengajuanAdmin::class, 'index'])->name('pengajuan.index');
+    Route::get('/pengajuan/filter', [PengajuanAdmin::class, 'filter'])->name('pengajuan.filter');
     Route::post('/pengajuan/{id}/approve', [PengajuanAdmin::class, 'approve'])->name('pengajuan.approve');
     Route::post('/pengajuan/{id}/reject', [PengajuanAdmin::class, 'reject'])->name('pengajuan.reject');
+    Route::post('/pengajuan/{id}/upload-proof', [PengajuanAdmin::class, 'uploadProof'])->name('pengajuan.upload-proof');
+    Route::get('/pengajuan/{id}/proof', [PengajuanAdmin::class, 'showProof'])->name('pengajuan.show-proof');
     // Reports
     Route::get('/laporan', [LaporanSampahController::class, 'index'])->name('laporan.index');
     Route::get('/export-laporan', [LaporanSampahController::class, 'exportPdf'])->name('laporan.export');
