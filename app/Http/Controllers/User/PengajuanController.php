@@ -172,4 +172,23 @@ class PengajuanController extends Controller
             'memberAccount' => $memberAccount
         ]);
     }
+    public function showProof($id)
+    {
+        $user = Auth::user();
+        $memberAccount = MemberAccount::where('user_id', $user->id)->first();
+
+        if (!$memberAccount) {
+            abort(404);
+        }
+
+        $withdrawal = Withdrawal::where('id', $id)
+            ->where('member_account_id', $memberAccount->id)
+            ->where('method', 'ewallet')
+            ->whereNotNull('proof_of_transfer')
+            ->firstOrFail();
+
+        return response()->json([
+            'proof_url' => $withdrawal->proof_of_transfer_url
+        ]);
+    }
 }

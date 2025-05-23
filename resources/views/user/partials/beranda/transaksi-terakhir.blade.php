@@ -1,4 +1,4 @@
-<div class="mb-20">
+<div class="mb-6">
     <div class="flex justify-between items-center mb-3">
         <h3 class="font-bold text-dark">Transaksi Terakhir</h3>
         <a href="{{ route('user.transaksi') }}" class="text-primary text-sm font-medium"

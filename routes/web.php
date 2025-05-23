@@ -86,4 +86,5 @@ Route::prefix('user')->middleware(['auth', 'role:member'])->group(function () {
     Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('user.pengajuan');
     Route::get('/pengajuan/create', [PengajuanController::class, 'create'])->name('user.pengajuan.create');
     Route::post('/pengajuan', [PengajuanController::class, 'store'])->name('user.pengajuan.store');
+    Route::get('/pengajuan/proof/{id}', [PengajuanController::class, 'showProof'])->name('user.pengajuan.proof');
 });

@@ -58,4 +58,12 @@ class Withdrawal extends Model
     {
         return $this->method === 'ewallet';
     }
+
+    public function getProofOfTransferUrlAttribute()
+    {
+        if ($this->proof_of_transfer) {
+            return asset('storage/' . $this->proof_of_transfer);
+        }
+        return null;
+    }
 }
