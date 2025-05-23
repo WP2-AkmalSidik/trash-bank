@@ -1,16 +1,17 @@
 <?php
 
-use App\Http\Controllers\Admin\LaporanSampahController;
-use App\Http\Controllers\Admin\LokasiBankSampahController;
-use App\Http\Controllers\Admin\PengumumanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SampahController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Admin\NasabahController;
+use App\Http\Controllers\Admin\ResidueController;
 use App\Http\Controllers\Admin\TabunganController;
 use App\Http\Controllers\User\PengajuanController;
-use App\Http\Controllers\Admin\PengajuanController as PengajuanAdmin;
 use App\Http\Controllers\User\TransaksiController;
+use App\Http\Controllers\Admin\PengumumanController;
+use App\Http\Controllers\Admin\LaporanSampahController;
+use App\Http\Controllers\Admin\LokasiBankSampahController;
+use App\Http\Controllers\Admin\PengajuanController as PengajuanAdmin;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Authentication\AuthController as AuthenticationController;
@@ -65,6 +66,14 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/sampah/{id}', [SampahController::class, 'show'])->name('sampah.show');
     Route::put('/sampah/{id}', [SampahController::class, 'update'])->name('sampah.update');
     Route::delete('/sampah/{id}', [SampahController::class, 'destroy'])->name('sampah.destroy');
+    // Residu
+    Route::prefix('residu')->group(function () {
+        Route::get('/', [ResidueController::class, 'index'])->name('residu.index');
+        Route::post('/', [ResidueController::class, 'store'])->name('residu.store');
+        Route::get('/{residu}', [ResidueController::class, 'show'])->name('residu.show');
+        Route::post('/{residu}', [ResidueController::class, 'update'])->name('residu.update');
+        Route::delete('/{residu}', [ResidueController::class, 'destroy'])->name('residu.destroy');
+    });
     // Pengajuan
     Route::get('/pengajuan', [PengajuanAdmin::class, 'index'])->name('pengajuan.index');
     Route::get('/pengajuan/filter', [PengajuanAdmin::class, 'filter'])->name('pengajuan.filter');
