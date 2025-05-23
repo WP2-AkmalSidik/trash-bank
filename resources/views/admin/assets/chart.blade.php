@@ -138,8 +138,8 @@
                                 return label;
                             }
                         },
-                        bodyColor: isDarkMode ? '#ffffff' : '#000000',
-                        titleColor: isDarkMode ? '#ffffff' : '#000000'
+                        bodyColor: isDarkMode ? '#ffffff' : '#ffffff',
+                        titleColor: isDarkMode ? '#ffffff' : '#ffffff'
                     }
                 },
                 cutout: '70%'
