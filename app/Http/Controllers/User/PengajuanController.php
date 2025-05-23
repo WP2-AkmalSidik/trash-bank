@@ -41,18 +41,11 @@ class PengajuanController extends Controller
         // Minimal saldo yang harus tersisa setelah penarikan
         $minimumBalance = 10000;
 
-        // Cek apakah account berusia minimal 6 bulan
-        $accountAge = Carbon::parse($memberAccount->created_at);
-        $sixMonthsAfter = $accountAge->copy()->addMonths(6);
-        $isAccountEligible = Carbon::now()->gte($sixMonthsAfter);
-
         return view('user.pengajuan', [
             'memberAccount' => $memberAccount,
             'withdrawals' => $withdrawals,
             'minimumBalance' => $minimumBalance,
-            'withdrawableAmount' => max(0, $memberAccount->balance - $minimumBalance),
-            'isAccountEligible' => $isAccountEligible,
-            'eligibleDate' => $sixMonthsAfter->format('d M Y')
+            'withdrawableAmount' => max(0, $memberAccount->balance - $minimumBalance)
         ]);
     }
 
@@ -65,16 +58,6 @@ class PengajuanController extends Controller
         if (!$memberAccount) {
             return redirect()->route('user.dashboard')
                 ->with('error', 'Anda belum memiliki rekening. Hubungi admin untuk membuat rekening.');
-        }
-
-        // Cek apakah account berusia minimal 6 bulan
-        $accountAge = Carbon::parse($memberAccount->created_at);
-        $sixMonthsAfter = $accountAge->copy()->addMonths(6);
-        $isAccountEligible = Carbon::now()->gte($sixMonthsAfter);
-
-        if (!$isAccountEligible) {
-            return redirect()->route('user.pengajuan')
-                ->with('error', 'Akun Anda belum memenuhi persyaratan usia minimal (6 bulan) untuk melakukan penarikan dana. Akun Anda akan aktif untuk penarikan pada tanggal ' . $sixMonthsAfter->format('d M Y') . '.');
         }
 
         // Update saldo terlebih dahulu
@@ -111,16 +94,6 @@ class PengajuanController extends Controller
         if (!$memberAccount) {
             return redirect()->route('user.dashboard')
                 ->with('error', 'Anda belum memiliki rekening. Hubungi admin untuk membuat rekening.');
-        }
-
-        // Cek apakah account berusia minimal 6 bulan
-        $accountAge = Carbon::parse($memberAccount->created_at);
-        $sixMonthsAfter = $accountAge->copy()->addMonths(6);
-        $isAccountEligible = Carbon::now()->gte($sixMonthsAfter);
-
-        if (!$isAccountEligible) {
-            return redirect()->route('user.pengajuan')
-                ->with('error', 'Akun Anda belum memenuhi persyaratan usia minimal (6 bulan) untuk melakukan penarikan dana. Akun Anda akan aktif untuk penarikan pada tanggal ' . $sixMonthsAfter->format('d M Y') . '.');
         }
 
         // Update saldo terlebih dahulu
@@ -172,6 +145,7 @@ class PengajuanController extends Controller
             'memberAccount' => $memberAccount
         ]);
     }
+
     public function showProof($id)
     {
         $user = Auth::user();

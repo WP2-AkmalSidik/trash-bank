@@ -11,10 +11,6 @@
             <div class="card-balance p-4 mb-6">
                 <div class="flex justify-between items-center mb-2">
                     <h2 class="text-white text-lg font-bold">Status Pengajuan</h2>
-                    <div
-                        class="bg-{{ $isAccountEligible ? 'secondary/80' : 'red-600/80' }} text-xs text-white font-medium px-2 py-1 rounded-full">
-                        {{ $isAccountEligible ? 'Aktif' : 'Tidak Aktif' }}
-                    </div>
                 </div>
                 <p class="text-white/80 text-sm mb-3">Saldo yang dapat ditarik</p>
                 <h3 class="text-white text-2xl font-bold mb-4">Rp {{ number_format($withdrawableAmount, 0, ',', '.') }}</h3>
@@ -28,24 +24,18 @@
                         <span>Minimal saldo tersisa</span>
                         <span>Rp {{ number_format($minimumBalance, 0, ',', '.') }}</span>
                     </div>
-                    @if (!$isAccountEligible)
-                        <div class="flex justify-between text-white/90 text-sm mt-1 bg-red-500/20 p-2 rounded">
-                            <span>Akun aktif untuk penarikan pada</span>
-                            <span>{{ $eligibleDate }}</span>
-                        </div>
-                    @endif
                 </div>
             </div>
 
             <!-- Button trigger modal -->
             <button onclick="showPengajuanModal()"
-                class="block w-full bg-primary text-white font-medium py-3 rounded-xl mb-6 shadow-md text-center {{ !$isAccountEligible ? 'opacity-50 cursor-not-allowed' : '' }}">
+                class="block w-full bg-primary text-white font-medium py-3 rounded-xl mb-6 shadow-md text-center">
                 Ajukan Penarikan Dana
             </button>
 
             <!-- Modal -->
-            <div id="modal-pengajuan"
-                class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+            <div id="modal-pengajuan" class="fixed inset-0 z-50 flex items-center justify-center hidden"
+                style="background-color: rgba(255, 255, 255, 0.5);">
                 <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg relative">
                     <!-- Close button -->
                     <button onclick="document.getElementById('modal-pengajuan').classList.add('hidden')"
@@ -176,8 +166,7 @@
 
                             @if ($withdrawal->status == 'approved' && $withdrawal->method == 'ewallet' && $withdrawal->proof_of_transfer)
                                 <div class="mt-3 flex justify-end">
-                                    <button
-                                        onclick="showProofModal('{{ asset('storage/' . $withdrawal->proof_of_transfer) }}')"
+                                    <button onclick="showProof('{{ $withdrawal->id }}')"
                                         class="bg-blue-100 text-blue-600 hover:bg-blue-200 px-3 py-1 rounded-full text-sm font-medium flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
@@ -197,39 +186,41 @@
                                 </div>
                             @endif
                         </div>
-
-                        <!-- Proof Modal -->
-                        <div id="modal-proof"
-                            class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-                            <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg relative">
-                                <button onclick="document.getElementById('modal-proof').classList.add('hidden')"
-                                    class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
-                                    &times;
-                                </button>
-
-                                <h2 class="text-lg font-bold mb-4 text-gray-800">Bukti Transfer E-Wallet</h2>
-                                <div class="flex justify-center">
-                                    <img id="proof-image" src="" alt="Bukti Transfer"
-                                        class="max-w-full h-auto rounded-lg border border-gray-200">
-                                </div>
-
-                                <div class="mt-4 flex justify-end">
-                                    <button onclick="document.getElementById('modal-proof').classList.add('hidden')"
-                                        class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
-                                        Tutup
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <script>
-                            function showProofModal(imageUrl) {
-                                document.getElementById('proof-image').src = imageUrl;
-                                document.getElementById('modal-proof').classList.remove('hidden');
-                            }
-                        </script>
                     @endforeach
                 @endif
+            </div>
+        </div>
+    </div>
+
+    <!-- Proof Modal -->
+    <div id="modal-proof" class="fixed inset-0 z-50 flex items-start justify-center hidden" style="background-color: rgba(255, 255, 255, 0.5);">
+        <div class="bg-white w-full max-w-md rounded-xl shadow-xl relative mx-4 my-8 overflow-hidden">
+            <!-- Modal Header -->
+            <div class="border-b border-gray-100 px-6 py-4 flex justify-between items-center">
+                <h2 class="text-xl font-semibold text-gray-800">Bukti Transfer</h2>
+                <button onclick="document.getElementById('modal-proof').classList.add('hidden')"
+                    class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6">
+                <div class="flex justify-center mb-6">
+                    <img id="proof-image" src="" alt="Bukti Transfer"
+                        class="max-w-full h-auto rounded-lg border border-gray-200 shadow-sm">
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-gray-50 px-6 py-4 flex justify-end">
+                <button onclick="document.getElementById('modal-proof').classList.add('hidden')"
+                    class="px-5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium">
+                    Tutup
+                </button>
             </div>
         </div>
     </div>
@@ -258,20 +249,26 @@
 
         // Fungsi untuk menampilkan modal pengajuan
         function showPengajuanModal() {
-            const isEligible = {{ $isAccountEligible ? 'true' : 'false' }};
-
-            if (!isEligible) {
-                Swal.fire({
-                    title: 'Akun Belum Memenuhi Syarat',
-                    text: 'Akun Anda belum mencapai usia minimal 6 bulan untuk melakukan penarikan dana. Akun Anda akan aktif untuk penarikan pada tanggal {{ $eligibleDate }}.',
-                    icon: 'warning',
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'OK'
-                });
-                return;
-            }
-
             document.getElementById('modal-pengajuan').classList.remove('hidden');
+        }
+
+        // Fungsi untuk menampilkan bukti transfer
+        function showProof(withdrawalId) {
+            fetch(`/user/pengajuan/proof/${withdrawalId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('proof-image').src = data.proof_url;
+                    document.getElementById('modal-proof').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Gagal memuat bukti transfer',
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6'
+                    });
+                });
         }
 
         // SweetAlert untuk notifikasi
