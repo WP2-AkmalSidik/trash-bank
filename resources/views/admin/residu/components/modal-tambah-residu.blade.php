@@ -11,7 +11,7 @@
                         Nama Residu
                     </label>
                     <input type="text" id="name" name="name" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary" 
+                        class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary" 
                         required>
                 </div>
                 
@@ -20,13 +20,13 @@
                         Berat (kg)
                     </label>
                     <input type="number" id="weight_kg" name="weight_kg" step="0.01" min="0"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary" 
+                        class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary" 
                         required>
                 </div>
                 
                 <div class="flex justify-end gap-3 mt-6">
                     <button type="button" onclick="closeAddModal()"
-                        class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
+                        class="px-4 py-2 bg-white text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
                         Batal
                     </button>
                     <button type="submit"

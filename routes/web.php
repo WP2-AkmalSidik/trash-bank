@@ -71,7 +71,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/', [ResidueController::class, 'index'])->name('residu.index');
         Route::post('/', [ResidueController::class, 'store'])->name('residu.store');
         Route::get('/{residu}', [ResidueController::class, 'show'])->name('residu.show');
-        Route::post('/{residu}', [ResidueController::class, 'update'])->name('residu.update');
+        Route::put('/{residu}', [ResidueController::class, 'update'])->name('residu.update');
         Route::delete('/{residu}', [ResidueController::class, 'destroy'])->name('residu.destroy');
     });
     // Pengajuan

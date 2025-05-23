@@ -13,7 +13,7 @@
                         Nama Residu
                     </label>
                     <input type="text" id="edit_name" name="name" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary" 
+                        class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary" 
                         required>
                 </div>
                 
@@ -22,7 +22,7 @@
                         Berat (kg)
                     </label>
                     <input type="number" id="edit_weight_kg" name="weight_kg" step="0.01" min="0"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary" 
+                        class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary" 
                         required>
                 </div>
                 

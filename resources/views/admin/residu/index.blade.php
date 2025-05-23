@@ -173,7 +173,7 @@
                 
                 // Set loading state
                 button.prop('disabled', true);
-                button.html('<div class="spinner"></div>Menyimpan...');
+                button.html('<div class="spinner mr-2 inline-block"></div>Simpan...');
                 
                 $.ajax({
                     url: "{{ route('residu.store') }}",
@@ -203,7 +203,7 @@
                 
                 // Set loading state
                 button.prop('disabled', true);
-                button.html('<div class="spinner"></div>Memperbarui...');
+                button.html('<div class="spinner mr-2 inline-block"></div>Perbarui...');
                 
                 $.ajax({
                     url: `/admin/residu/${currentResiduId}`,
