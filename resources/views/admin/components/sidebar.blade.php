@@ -123,7 +123,7 @@
                                 d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                         </svg>
                         <span class="flex-1 ml-3 text-left whitespace-nowrap">Informasi & Lokasi</span>
-                        <svg class="w-6 h-6 dropdown-icon {{ request()->is('admin/pengumuman*') || request()->is('admin/lokasi*') ? 'rotate-180' : '' }}"
+                        <svg class="w-6 h-6 dropdown-icon {{ request()->is('pengumuman.*') || request()->is('lokasi.*') ? 'rotate-180' : '' }}"
                             fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
                                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -131,10 +131,10 @@
                         </svg>
                     </button>
                     <ul id="dropdown-informasi"
-                        class="dropdown-menu py-2 space-y-2 {{ request()->is('admin/pengumuman*') || request()->is('admin/lokasi*') ? 'active' : '' }}">
+                        class="dropdown-menu py-2 space-y-2 {{ request()->is('pengumuman.*') || request()->is('lokasi.*') ? 'active' : '' }}">
                         <li>
                             <a href="{{ route('pengumuman.index') }}"
-                                class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->is('admin/pengumuman*') ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
+                                class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->is('pengumuman.*') ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -145,7 +145,7 @@
                         </li>
                         <li>
                             <a href="{{ route('lokasi.index') }}"
-                                class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->is('admin/lokasi*') ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
+                                class="nav-link-child flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->is('lokasi.*') ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
