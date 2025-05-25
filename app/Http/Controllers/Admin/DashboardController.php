@@ -191,7 +191,7 @@ class DashboardController extends Controller
 
     private function getMonthlyData($topWasteTypeIds)
     {
-        // Get data for the last 12 months
+        // Ambil data 12 bulan terakhir
         $months = collect();
         $endDate = Carbon::now();
 
@@ -206,13 +206,11 @@ class DashboardController extends Controller
             ]);
         }
 
-        // Prepare result structure
         $result = [
             'labels' => $months->pluck('label')->toArray(),
             'datasets' => []
         ];
 
-        // Get data for each waste type
         foreach ($topWasteTypeIds as $index => $wasteTypeId) {
             $wasteType = WasteType::find($wasteTypeId);
 

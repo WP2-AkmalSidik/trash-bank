@@ -3,7 +3,6 @@
 
 @section('content')
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <!-- Total Nasabah -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-emerald-500">
             <div class="flex items-center justify-between">
                 <div>
@@ -25,7 +24,6 @@
             </div>
         </div>
 
-        <!-- Total Sampah Masuk (kg) -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-blue-500">
             <div class="flex items-center justify-between">
                 <div>
@@ -48,7 +46,6 @@
             </div>
         </div>
 
-        <!-- Total Penarikan Dana -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-amber-500">
             <div class="flex items-center justify-between">
                 <div>
@@ -72,8 +69,6 @@
             </div>
         </div>
 
-
-        <!-- Jumlah semua Sampah Masuk -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-purple-500">
             <div class="flex items-center justify-between">
                 <div>
@@ -91,7 +86,6 @@
         </div>
     </div>
 
-    <!-- Charts and Activity Section -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <!-- Chart - Statistik Sampah Masuk -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 lg:col-span-2">
@@ -112,7 +106,6 @@
             </div>
         </div>
 
-        <!-- Pengajuan Penarikan Terbaru -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Pengajuan Penarikan</h2>
@@ -153,7 +146,6 @@
         </div>
     </div>
 
-    <!-- Bottom Section -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Statistik Jenis Sampah -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
