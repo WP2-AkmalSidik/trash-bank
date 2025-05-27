@@ -20,8 +20,8 @@
                 <button id="darkModeToggle" onclick="toggleDarkMode()"
                     class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none ml-2">
                     <!-- Sun icon for dark mode -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 hidden dark:block dark:text-secondary" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 hidden dark:block dark:text-secondary"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
                     </svg>
@@ -50,12 +50,15 @@
                 <!-- Profile dropdown -->
                 <div class="relative ml-3">
                     <div class="dropdown">
-                        <button class="flex items-center text-sm rounded-full focus:outline-none focus:shadow-outline dark:text-white">
-                            <img class="h-8 w-8 rounded-full border-2 border-primary dark:border-secondary"
-                                src="https://randomuser.me/api/portraits/women/2.jpg" alt="User">
-                            <span class="ml-2 text-gray-700 dark:text-gray-100 hidden sm:block">Yosi Nurkhofifah</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1 text-gray-700 dark:text-gray-300" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <button
+                            class="flex items-center text-sm rounded-full focus:outline-none focus:shadow-outline dark:text-white">
+                            <img src="https://api.dicebear.com/7.x/pixel-art/svg?seed={{ Auth::user()->name }}" class="h-8 w-8 rounded-full border-2 border-primary dark:border-secondary" alt="User">
+                            <span class="ml-2 text-gray-700 dark:text-gray-100 hidden sm:block">
+                                {{ Auth::user()->name }}
+                            </span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="w-4 h-4 ml-1 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="1.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                             </svg>
                         </button>
@@ -71,8 +74,8 @@
                                 @csrf
                                 <button type="submit"
                                     class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6A2.25 2.25 0 0015.75 18.75V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
                                     </svg>
