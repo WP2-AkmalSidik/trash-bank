@@ -61,10 +61,8 @@
                                 class="text-blue-500 hover:text-blue-700" title="Cetak Bon">
                                 <i class="fa-solid fa-print"></i>
                             </a>
-                            <button type="button" 
-                                data-id="{{ $transaction->id }}"
-                                class="delete-transaction text-red-500 hover:text-red-700" 
-                                title="Hapus Transaksi">
+                            <button type="button" data-id="{{ $transaction->id }}"
+                                class="delete-transaction text-red-500 hover:text-red-700" title="Hapus Transaksi">
                                 <i class="fa-solid fa-trash-alt"></i>
                             </button>
                         @endif

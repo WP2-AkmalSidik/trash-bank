@@ -8,53 +8,104 @@ use App\Models\Location;
 use App\Models\News;
 use App\Models\Withdrawal;
 use App\Models\WasteType;
+use App\Models\MemberAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-
     public function index()
     {
         $user = Auth::user();
-        
         $memberAccount = $user->memberAccount;
-        
+
         if (!$memberAccount) {
             return view('user.beranda', [
                 'user' => $user,
+                'memberAccount' => null,
                 'balance' => 0,
-                'transactions' => [],
-                'wasteTypes' => [],
-                'news' => [],
-                'locations' => [],
-                'monthlyGrowth' => 0
+                'monthlyGrowth' => 0,
+                'transactions' => collect(),
+                'wasteTypes' => WasteType::all(),
+                'news' => News::orderBy('created_at', 'desc')->take(3)->get(),
+                'locations' => Location::all(),
+                'minimumBalance' => 10000,
+                'withdrawableAmount' => 0
             ]);
         }
-        
-        $balance = $memberAccount->balance;
-        
+
+        $memberAccount->load([
+            'deposits' => function($query) {
+                $query->select('member_account_id', DB::raw('SUM(total_price) as total'))
+                      ->groupBy('member_account_id');
+            },
+            'withdrawals' => function($query) {
+                $query->where('status', 'approved')
+                      ->select('member_account_id', DB::raw('SUM(amount) as total'))
+                      ->groupBy('member_account_id');
+            }
+        ]);
+
+        $totalDeposits = $memberAccount->deposits->first()->total ?? 0;
+        $totalWithdrawals = $memberAccount->withdrawals->first()->total ?? 0;
+        $balance = $totalDeposits - $totalWithdrawals;
+
+        if ($memberAccount->balance != $balance) {
+            $memberAccount->balance = $balance;
+            $memberAccount->save();
+        }
+
+        $monthlyGrowth = $this->calculateMonthlyGrowth($memberAccount->id);
+
+        $transactions = $this->getLatestTransactions($memberAccount->id);
+
+        $wasteTypes = WasteType::all();
+        $news = News::orderBy('created_at', 'desc')->take(3)->get();
+        $locations = Location::all();
+        $minimumBalance = 10000;
+        $withdrawableAmount = max(0, $balance - $minimumBalance);
+
+        return view('user.beranda', [
+            'user' => $user,
+            'memberAccount' => $memberAccount,
+            'balance' => $balance,
+            'monthlyGrowth' => $monthlyGrowth,
+            'transactions' => $transactions,
+            'wasteTypes' => $wasteTypes,
+            'news' => $news,
+            'locations' => $locations,
+            'minimumBalance' => $minimumBalance,
+            'withdrawableAmount' => $withdrawableAmount
+        ]);
+    }
+
+    private function calculateMonthlyGrowth($accountId)
+    {
         $currentMonth = now()->month;
         $lastMonth = now()->subMonth()->month;
-        
-        $currentMonthDeposits = Deposit::where('member_account_id', $memberAccount->id)
+
+        $currentMonthDeposits = Deposit::where('member_account_id', $accountId)
             ->whereMonth('created_at', $currentMonth)
             ->sum('total_price');
-            
-        $lastMonthDeposits = Deposit::where('member_account_id', $memberAccount->id)
+
+        $lastMonthDeposits = Deposit::where('member_account_id', $accountId)
             ->whereMonth('created_at', $lastMonth)
             ->sum('total_price');
-            
+
         $monthlyGrowth = 0;
         if ($lastMonthDeposits > 0) {
             $monthlyGrowth = (($currentMonthDeposits - $lastMonthDeposits) / $lastMonthDeposits) * 100;
         } elseif ($currentMonthDeposits > 0) {
             $monthlyGrowth = 100;
         }
-        
-        $wasteTypes = WasteType::all();
-        
-        $depositTransactions = Deposit::where('member_account_id', $memberAccount->id)
+
+        return round($monthlyGrowth, 1);
+    }
+
+    private function getLatestTransactions($accountId)
+    {
+        $deposits = Deposit::where('member_account_id', $accountId)
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get()
@@ -67,8 +118,8 @@ class DashboardController extends Controller
                     'created_at' => $deposit->created_at
                 ];
             });
-            
-        $withdrawalTransactions = Withdrawal::where('member_account_id', $memberAccount->id)
+
+        $withdrawals = Withdrawal::where('member_account_id', $accountId)
             ->where('status', 'approved')
             ->orderBy('created_at', 'desc')
             ->take(5)
@@ -82,31 +133,28 @@ class DashboardController extends Controller
                     'created_at' => $withdrawal->created_at
                 ];
             });
-            
-        $allTransactions = $depositTransactions->concat($withdrawalTransactions)
+
+        return $deposits->concat($withdrawals)
             ->sortByDesc('created_at')
             ->take(5);
+    }
+
+    public static function syncAccountBalance($accountId)
+    {
+        $account = MemberAccount::findOrFail($accountId);
         
-        $news = News::orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
+        $totalDeposits = Deposit::where('member_account_id', $accountId)
+            ->sum('total_price');
+            
+        $totalWithdrawals = Withdrawal::where('member_account_id', $accountId)
+            ->where('status', 'approved')
+            ->sum('amount');
         
-        $locations = Location::all();
+        $balance = $totalDeposits - $totalWithdrawals;
         
-        $minimumBalance = 10000;
-        $withdrawableAmount = max(0, $balance - $minimumBalance);
+        $account->balance = $balance;
+        $account->save();
         
-        return view('user.beranda', [
-            'user' => $user,
-            'memberAccount' => $memberAccount,
-            'balance' => $balance,
-            'monthlyGrowth' => round($monthlyGrowth, 1),
-            'transactions' => $allTransactions,
-            'wasteTypes' => $wasteTypes,
-            'news' => $news,
-            'locations' => $locations,
-            'minimumBalance' => $minimumBalance,
-            'withdrawableAmount' => $withdrawableAmount
-        ]);
+        return $balance;
     }
 }

@@ -9,9 +9,6 @@
 
         <div class="p-5">
             <div class="card-balance p-4 mb-6">
-                <div class="flex justify-between items-center mb-2">
-                    <h2 class="text-white text-lg font-bold">Status Pengajuan</h2>
-                </div>
                 <p class="text-white/80 text-sm mb-3">Saldo yang dapat ditarik</p>
                 <h3 class="text-white text-2xl font-bold mb-4">Rp {{ number_format($withdrawableAmount, 0, ',', '.') }}</h3>
 

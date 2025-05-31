@@ -14,9 +14,7 @@ use App\Http\Controllers\Controller;
 
 class TabunganController extends Controller
 {
-    /**
-     * Display the transaction form
-     */
+    
     public function index(Request $request)
     {
         $members = User::where('role', 'member')
@@ -41,23 +39,28 @@ class TabunganController extends Controller
         return view('admin.tabungan.index', compact('members', 'wasteTypes'));
     }
 
-    /**
-     * Get member data for the transaction form
-     */
+    
     public function getMemberData(Request $request)
     {
         $member = User::where('role', 'member')
             ->with([
-                'memberAccount.deposits',
-                'memberAccount.withdrawals' => function ($q) {
-                    $q->where('status', 'approved'); // hanya withdrawal yang disetujui
+                'memberAccount' => function ($q) {
+                    $q->withSum([
+                        'deposits as total_deposits' => function ($query) {
+                            $query->select(DB::raw('COALESCE(SUM(total_price), 0)'));
+                        }
+                    ], 'total_price')
+                        ->withSum([
+                            'withdrawals as total_withdrawals' => function ($query) {
+                                $query->where('status', 'approved')
+                                    ->select(DB::raw('COALESCE(SUM(amount), 0)'));
+                            }
+                        ], 'amount');
                 }
             ])
             ->findOrFail($request->member_id);
 
-        $totalDeposits = $member->memberAccount->deposits->sum('total_price');
-        $totalWithdrawals = $member->memberAccount->withdrawals->sum('amount');
-        $balance = $totalDeposits - $totalWithdrawals;
+        $balance = $member->memberAccount->total_deposits - $member->memberAccount->total_withdrawals;
 
         return response()->json([
             'member' => $member,
@@ -65,9 +68,25 @@ class TabunganController extends Controller
         ]);
     }
 
-    /**
-     * Get waste type price
-     */
+    
+    public function syncBalance($memberAccountId)
+    {
+        $memberAccount = MemberAccount::findOrFail($memberAccountId);
+
+        $totalDeposits = $memberAccount->deposits()->sum('total_price');
+        $totalWithdrawals = $memberAccount->withdrawals()
+            ->where('status', 'approved')
+            ->sum('amount');
+
+        $balance = $totalDeposits - $totalWithdrawals;
+
+        $memberAccount->balance = $balance;
+        $memberAccount->save();
+
+        return $balance;
+    }
+
+    
     public function getWastePrice(Request $request)
     {
         $wasteType = WasteType::findOrFail($request->waste_type_id);
@@ -76,9 +95,7 @@ class TabunganController extends Controller
         ]);
     }
 
-    /**
-     * Store new deposit transaction
-     */
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -97,12 +114,11 @@ class TabunganController extends Controller
                 'member_account_id' => $request->member_account_id,
                 'waste_type_id' => $request->waste_type_id,
                 'weight_kg' => $request->weight_kg,
-                'price_per_kg' => $pricePerKg, // Store current price at time of deposit
+                'price_per_kg' => $pricePerKg,
                 'total_price' => $totalPrice,
             ]);
 
-            $memberAccount = MemberAccount::with('user')->find($request->member_account_id);
-            $memberName = $memberAccount->user->name ?? 'Nasabah';
+            $newBalance = $this->syncBalance($request->member_account_id);
 
             DB::commit();
 
@@ -110,7 +126,8 @@ class TabunganController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Transaksi setoran sampah berhasil disimpan!',
-                    'deposit_id' => $deposit->id
+                    'deposit_id' => $deposit->id,
+                    'new_balance' => $newBalance
                 ]);
             }
 
@@ -132,9 +149,6 @@ class TabunganController extends Controller
         }
     }
 
-    /**
-     * Show transaction history for a specific member
-     */
     public function history(Request $request, $memberId)
     {
         $member = User::where('role', 'member')
@@ -146,10 +160,8 @@ class TabunganController extends Controller
             ])
             ->findOrFail($memberId);
 
-        // Dapatkan ID account member
         $accountId = $member->memberAccount->id;
 
-        // Query untuk deposits dengan pagination
         $depositsQuery = DB::table('deposits')
             ->where('member_account_id', $accountId)
             ->select(
@@ -157,14 +169,13 @@ class TabunganController extends Controller
                 'member_account_id',
                 'waste_type_id',
                 'weight_kg',
-                'price_per_kg', // Add price_per_kg to select
+                'price_per_kg',
                 'total_price',
                 'created_at',
                 'updated_at',
                 DB::raw('"deposit" as type')
             );
 
-        // Query untuk withdrawals yang approved dengan pagination
         $withdrawalsQuery = DB::table('withdrawals')
             ->where('member_account_id', $accountId)
             ->where('status', 'approved')
@@ -173,23 +184,20 @@ class TabunganController extends Controller
                 'member_account_id',
                 DB::raw('NULL as waste_type_id'),
                 DB::raw('NULL as weight_kg'),
-                DB::raw('NULL as price_per_kg'), // Add price_per_kg field for consistency
+                DB::raw('NULL as price_per_kg'),
                 DB::raw('amount as total_price'),
                 'created_at',
                 'updated_at',
                 DB::raw('"withdrawal" as type')
             );
 
-        // Gabungkan menggunakan unionAll
         $transactionsQuery = $depositsQuery->unionAll($withdrawalsQuery);
 
-        // Buat query utama untuk pagination
         $transactions = DB::table(DB::raw("({$transactionsQuery->toSql()}) as merged_transactions"))
             ->mergeBindings($transactionsQuery)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        // Load wasteType untuk deposit
         $wasteTypes = WasteType::whereIn(
             'id',
             collect($transactions->items())
@@ -197,7 +205,6 @@ class TabunganController extends Controller
                 ->pluck('waste_type_id')
         )->get()->keyBy('id');
 
-        // Tambahkan wasteType ke hasil
         $transactions->getCollection()->transform(function ($item) use ($wasteTypes) {
             if ($item->type === 'deposit') {
                 $item->wasteType = $wasteTypes[$item->waste_type_id] ?? null;
@@ -205,7 +212,6 @@ class TabunganController extends Controller
             return $item;
         });
 
-        // Hitung total saldo
         $totalDeposits = $member->memberAccount->deposits->sum('total_price');
         $totalWithdrawals = $member->memberAccount->withdrawals->sum('amount');
         $totalBalance = $totalDeposits - $totalWithdrawals;
@@ -217,9 +223,7 @@ class TabunganController extends Controller
         return view('admin.tabungan.history', compact('member', 'transactions', 'totalBalance'));
     }
 
-    /**
-     * Print transaction receipt
-     */
+    
     public function printReceipt($id)
     {
         $deposit = Deposit::with(['memberAccount.user', 'wasteType'])
@@ -228,9 +232,7 @@ class TabunganController extends Controller
         return view('admin.tabungan.components.receipt', compact('deposit'));
     }
 
-    /**
-     * Print all transaction history as PDF
-     */
+    
     public function printHistory($memberId)
     {
         $member = User::where('role', 'member')
@@ -242,10 +244,8 @@ class TabunganController extends Controller
             ])
             ->findOrFail($memberId);
 
-        // Dapatkan ID account member
         $accountId = $member->memberAccount->id;
 
-        // Query untuk deposits
         $deposits = Deposit::with('wasteType')
             ->where('member_account_id', $accountId)
             ->get()
@@ -255,13 +255,12 @@ class TabunganController extends Controller
                     'type' => 'deposit',
                     'waste_type' => $item->wasteType,
                     'weight_kg' => $item->weight_kg,
-                    'price_per_kg' => $item->price_per_kg, // Include price_per_kg
+                    'price_per_kg' => $item->price_per_kg,
                     'total_price' => $item->total_price,
                     'created_at' => $item->created_at
                 ];
             });
 
-        // Query untuk withdrawals yang approved
         $withdrawals = Withdrawal::where('member_account_id', $accountId)
             ->where('status', 'approved')
             ->get()
@@ -271,13 +270,12 @@ class TabunganController extends Controller
                     'type' => 'withdrawal',
                     'waste_type' => null,
                     'weight_kg' => null,
-                    'price_per_kg' => null, // Include price_per_kg field for consistency
+                    'price_per_kg' => null,
                     'total_price' => $item->amount,
                     'created_at' => $item->created_at
                 ];
             });
 
-        // Gabungkan dan urutkan
         $transactions = $deposits->merge($withdrawals)
             ->sortByDesc('created_at');
 
@@ -297,25 +295,20 @@ class TabunganController extends Controller
         return $pdf->download('riwayat-transaksi-' . $member->memberAccount->account_number . '.pdf');
     }
 
-    /**
-     * Delete a deposit transaction
-     */
+    
     public function destroy($id)
     {
         DB::beginTransaction();
         try {
             $deposit = Deposit::findOrFail($id);
 
-            // Dapatkan data member untuk response
             $memberAccount = $deposit->memberAccount;
             $memberId = $memberAccount->user_id;
 
-            // Hapus transaksi
             $deposit->delete();
 
             DB::commit();
 
-            // Hitung ulang saldo
             $totalDeposits = $memberAccount->deposits()->sum('total_price');
             $totalWithdrawals = $memberAccount->withdrawals()
                 ->where('status', 'approved')

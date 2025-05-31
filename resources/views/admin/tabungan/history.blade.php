@@ -78,90 +78,100 @@
         </div>
     </section>
     <script>
-        // Fungsi konfirmasi hapus
-        function confirmDelete(transactionId) {
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Transaksi ini akan dihapus dan saldo nasabah akan dikurangi!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    deleteTransaction(transactionId);
-                }
-            });
-        }
-
-        // Fungsi hapus transaksi
-        function deleteTransaction(transactionId) {
-            Swal.fire({
-                title: 'Menghapus Transaksi',
-                text: 'Sedang memproses...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
+        $(document).ready(function() {
+            // Event listener untuk tombol hapus
+            $(document).on('click', '.delete-transaction', function() {
+                const transactionId = $(this).data('id');
+                confirmDelete(transactionId);
             });
 
-            $.ajax({
-                url: `/admin/transaksi/histori/${transactionId}`,
-                type: 'DELETE',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: response.message,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+            // Fungsi konfirmasi hapus
+            function confirmDelete(transactionId) {
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Transaksi ini akan dihapus dan saldo nasabah akan dikurangi!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteTransaction(transactionId);
+                    }
+                });
+            }
 
-                    // Hapus baris dari tabel
-                    $(`#transaction-row-${response.transaction_id}`).fadeOut(300, function() {
-                        $(this).remove();
+            // Fungsi hapus transaksi
+            function deleteTransaction(transactionId) {
+                Swal.fire({
+                    title: 'Menghapus Transaksi',
+                    text: 'Sedang memproses...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
 
-                        // Update saldo yang ditampilkan
-                        $('.total-balance').text(response.balance);
+                $.ajax({
+                    url: `/admin/transaksi/histori/${transactionId}`,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
 
-                        // Jika tabel kosong, reload halaman
-                        if ($('tbody tr').length <= 1) {
-                            window.location.reload();
-                        }
-                    });
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: xhr.responseJSON?.message || 'Terjadi kesalahan saat menghapus transaksi'
-                    });
-                }
-            });
-        }
+                        // Hapus baris dari tabel
+                        $(`#row-transaction-${transactionId}`).fadeOut(300, function() {
+                            $(this).remove();
 
-        // Handle print receipt dengan SweetAlert
-        $(document).on('click', '.print-receipt', function(e) {
-            e.preventDefault();
-            const url = $(this).attr('href');
+                            // Update saldo yang ditampilkan
+                            $('.total-balance').text('Rp ' + response.balance.replace(
+                                /\B(?=(\d{3})+(?!\d))/g, "."));
 
-            Swal.fire({
-                title: 'Mempersiapkan Struk',
-                text: 'Sedang memuat data struk...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                    window.open(url, '_blank');
-                    setTimeout(() => {
-                        Swal.close();
-                    }, 1000);
-                }
+                            // Jika tabel kosong, reload halaman
+                            if ($('tbody tr').length <= 1) {
+                                window.location.reload();
+                            }
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: xhr.responseJSON?.message ||
+                                'Terjadi kesalahan saat menghapus transaksi'
+                        });
+                    }
+                });
+            }
+
+            // Handle print receipt dengan SweetAlert
+            $(document).on('click', '.print-receipt', function(e) {
+                e.preventDefault();
+                const url = $(this).attr('href');
+
+                Swal.fire({
+                    title: 'Mempersiapkan Struk',
+                    text: 'Sedang memuat data struk...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        window.open(url, '_blank');
+                        setTimeout(() => {
+                            Swal.close();
+                        }, 1000);
+                    }
+                });
             });
         });
     </script>
