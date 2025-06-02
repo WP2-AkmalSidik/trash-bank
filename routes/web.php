@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\TabunganController;
 use App\Http\Controllers\User\PengajuanController;
 use App\Http\Controllers\User\TransaksiController;
 use App\Http\Controllers\Admin\PengumumanController;
+use App\Http\Controllers\Admin\ProfileAdminController;
 use App\Http\Controllers\Admin\LaporanSampahController;
 use App\Http\Controllers\Admin\LokasiBankSampahController;
 use App\Http\Controllers\Admin\PengajuanController as PengajuanAdmin;
@@ -26,6 +27,10 @@ Route::controller(AuthenticationController::class)->group(function () {
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    
+    // Profile routes
+    Route::get('/profile', [ProfileAdminController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [ProfileAdminController::class, 'update'])->name('admin.profile.update');
 
     // Pengumuman resource routes (index, show, store, update, destroy)
     Route::resource('pengumuman', PengumumanController::class)
