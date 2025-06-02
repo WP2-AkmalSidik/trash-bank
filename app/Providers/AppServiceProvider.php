@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Deposit;
 use App\Models\Withdrawal;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +31,10 @@ class AppServiceProvider extends ServiceProvider
             if ($withdrawal->isDirty('status') && $withdrawal->status === 'approved') {
                 $withdrawal->memberAccount->decrement('balance', $withdrawal->amount);
             }
+        });
+        View::composer('admin.components.topbar', function ($view) {
+            $pendingCount = Withdrawal::where('status', 'pending')->count();
+            $view->with('pendingCount', $pendingCount);
         });
     }
 }
