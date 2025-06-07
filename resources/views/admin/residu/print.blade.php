@@ -144,7 +144,7 @@
             <p>{{ number_format($totalResidu, 2) }} kg</p>
         </div>
         <div class="summary-box">
-            <h3>Sampah Bersih</h3>
+            <h3>Sampah Terpilih</h3>
             <p>{{ number_format($cleanWaste, 2) }} kg</p>
         </div>
     </div>

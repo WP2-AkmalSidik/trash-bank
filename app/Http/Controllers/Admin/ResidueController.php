@@ -51,6 +51,10 @@ class ResidueController extends Controller
 
         $years = Residue::selectRaw('YEAR(created_at) as year')->distinct()->pluck('year')->sortDesc();
 
+        if ($request->ajax()) {
+            return view('admin.residu.components.residu-table', compact('residues'));
+        }
+
         return view('admin.residu.index', compact(
             'residues',
             'totalResidu',

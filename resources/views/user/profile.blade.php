@@ -74,7 +74,21 @@
                             @if ($isActive)
                                 Sudah bisa melakukan penarikan
                             @else
-                                Belum bisa melakukan penarikan (minimal 6 bulan)
+                                <span class="relative inline-block">
+                                    <button onclick="toggleInfo()" class="text-blue-600 hover:underline">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 text-yellow-500"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <title>Keterangan</title>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                                        </svg>
+                                    </button>
+                                    <div id="infoPopover"
+                                        class="hidden absolute z-10 w-64 p-2 mt-2 text-sm text-gray-700 bg-white border rounded shadow">
+                                        Penarikan hanya bisa dilakukan setelah akun berusia minimal <strong>6 bulan</strong>
+                                        sejak pendaftaran.
+                                    </div>
+                                </span>
                             @endif
                         </span>
                     </div>
@@ -124,6 +138,20 @@
                     document.getElementById('logout-form').submit();
                 }
             });
+        });
+
+        function toggleInfo() {
+            const popover = document.getElementById('infoPopover');
+            popover.classList.toggle('hidden');
+        }
+
+        // Optional: klik di luar untuk menutup
+        document.addEventListener('click', function(event) {
+            const popover = document.getElementById('infoPopover');
+            const button = event.target.closest('button');
+            if (!popover.contains(event.target) && !button) {
+                popover.classList.add('hidden');
+            }
         });
     </script>
 @endsection
