@@ -34,8 +34,8 @@
 
 
 <!-- Location Map Modal -->
-<div id="locationMapModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+<div id="locationMapModal" class="fixed inset-0 z-[9999] hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-black/70 transition-opacity backdrop-blur-sm"></div>
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="relative bg-white rounded-lg overflow-hidden shadow-xl transform transition-all w-full max-w-4xl">
             <div class="absolute top-0 right-0 pt-4 pr-4">
