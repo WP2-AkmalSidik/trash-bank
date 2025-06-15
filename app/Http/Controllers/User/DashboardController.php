@@ -36,14 +36,14 @@ class DashboardController extends Controller
         }
 
         $memberAccount->load([
-            'deposits' => function($query) {
+            'deposits' => function ($query) {
                 $query->select('member_account_id', DB::raw('SUM(total_price) as total'))
-                      ->groupBy('member_account_id');
+                    ->groupBy('member_account_id');
             },
-            'withdrawals' => function($query) {
+            'withdrawals' => function ($query) {
                 $query->where('status', 'approved')
-                      ->select('member_account_id', DB::raw('SUM(amount) as total'))
-                      ->groupBy('member_account_id');
+                    ->select('member_account_id', DB::raw('SUM(amount) as total'))
+                    ->groupBy('member_account_id');
             }
         ]);
 
@@ -142,19 +142,29 @@ class DashboardController extends Controller
     public static function syncAccountBalance($accountId)
     {
         $account = MemberAccount::findOrFail($accountId);
-        
+
         $totalDeposits = Deposit::where('member_account_id', $accountId)
             ->sum('total_price');
-            
+
         $totalWithdrawals = Withdrawal::where('member_account_id', $accountId)
             ->where('status', 'approved')
             ->sum('amount');
-        
+
         $balance = $totalDeposits - $totalWithdrawals;
-        
+
         $account->balance = $balance;
         $account->save();
-        
+
         return $balance;
+    }
+    public function getAnnouncement($id)
+    {
+        $announcement = News::findOrFail($id);
+
+        return response()->json([
+            'title' => $announcement->title,
+            'content' => $announcement->content,
+            'created_at' => $announcement->created_at
+        ]);
     }
 }

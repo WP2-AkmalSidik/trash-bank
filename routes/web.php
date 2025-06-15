@@ -114,6 +114,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 // User routes
 Route::prefix('user')->middleware(['auth', 'role:member'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('/announcement/{id}', [UserDashboardController::class, 'getAnnouncement'])->name('announcement.detail');
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('user.transaksi');
     Route::get('/transaksi/filter', [TransaksiController::class, 'filter'])->name('user.transaksi.filter');
