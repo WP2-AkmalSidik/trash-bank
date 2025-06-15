@@ -53,12 +53,11 @@
                     <p class="text-sm text-gray-500 mb-1">Nomor Rekening</p>
                     <p class="font-medium">{{ $user->memberAccount->account_number }}</p>
                 </div>
-
                 <div class="mb-4">
                     <p class="text-sm text-gray-500 mb-1">Tanggal Pembukaan</p>
-                    <p class="font-medium">{{ $user->memberAccount->created_at->format('d F Y') }}</p>
+                    <p class="font-medium">{{ $user->memberAccount->created_at->locale('id')->translatedFormat('d F Y') }}
+                    </p>
                 </div>
-
                 <div>
                     <p class="text-sm text-gray-500 mb-1">Status</p>
                     <div class="inline-flex items-center">
